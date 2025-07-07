@@ -15,7 +15,9 @@
     "noUnusedParameters": true,
     "jsx": "react",
     "jsxFactory": "h",
-    "jsxFragmentFactory": "h.Fragment"
+    "jsxFragmentFactory": "h.Fragment",
+    "resolveJsonModule": true,
+    "types": ["@stencil/core", "@cdssnc/gcds-components"]
   },
   "include": [
     "src"

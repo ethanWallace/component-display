@@ -5,57 +5,49 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { AttributesType, EventType, SlotType } from "./components/component-display/component-display";
+export { AttributesType, EventType, SlotType } from "./components/component-display/component-display";
 export namespace Components {
-    interface MyComponent {
+    interface ComponentDisplay {
         /**
-          * The first name
+          * @default false
          */
-        "first": string;
-        /**
-          * The last name
-         */
-        "last": string;
-        /**
-          * The middle name
-         */
-        "middle": string;
+        "accessibility"?: boolean;
+        "attrs"?: string | Array<AttributesType>;
+        "events"?: string | Array<EventType>;
+        "slots"?: string | Array<SlotType>;
     }
 }
 declare global {
-    interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
+    interface HTMLComponentDisplayElement extends Components.ComponentDisplay, HTMLStencilElement {
     }
-    var HTMLMyComponentElement: {
-        prototype: HTMLMyComponentElement;
-        new (): HTMLMyComponentElement;
+    var HTMLComponentDisplayElement: {
+        prototype: HTMLComponentDisplayElement;
+        new (): HTMLComponentDisplayElement;
     };
     interface HTMLElementTagNameMap {
-        "my-component": HTMLMyComponentElement;
+        "component-display": HTMLComponentDisplayElement;
     }
 }
 declare namespace LocalJSX {
-    interface MyComponent {
+    interface ComponentDisplay {
         /**
-          * The first name
+          * @default false
          */
-        "first"?: string;
-        /**
-          * The last name
-         */
-        "last"?: string;
-        /**
-          * The middle name
-         */
-        "middle"?: string;
+        "accessibility"?: boolean;
+        "attrs"?: string | Array<AttributesType>;
+        "events"?: string | Array<EventType>;
+        "slots"?: string | Array<SlotType>;
     }
     interface IntrinsicElements {
-        "my-component": MyComponent;
+        "component-display": ComponentDisplay;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
+            "component-display": LocalJSX.ComponentDisplay & JSXBase.HTMLAttributes<HTMLComponentDisplayElement>;
         }
     }
 }

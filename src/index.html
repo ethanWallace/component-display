@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
@@ -7,8 +7,214 @@
 
     <script type="module" src="/build/component-display.esm.js"></script>
     <script nomodule src="/build/component-display.js"></script>
+
+    <!-- GC Design System -->
+    <link rel="stylesheet" href="https://cdn.design-system.alpha.canada.ca/@cdssnc/gcds-components@latest/dist/gcds/gcds.css" />
+    <script type="module" src="https://cdn.design-system.alpha.canada.ca/@cdssnc/gcds-components@latest/dist/gcds/gcds.esm.js"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet" />
+
+    <!-- GC Design System Utility -->
+    <link rel="stylesheet" href="https://cdn.design-system.alpha.canada.ca/@cdssnc/gcds-utility@latest/dist/gcds-utility.min.css" />
   </head>
   <body>
-    <my-component first="Stencil" middle="'Don't call me a framework'" last="JS"></my-component>
+    <gcds-container size="xl" main-container centered tag="main">
+      <gcds-heading tag="h1">Proof of concept - component-display</gcds-heading>
+
+      <gcds-text>I want to try and replace our storybook iframe on the documentation site mainly so we truly have an accessible and bilingual experience.</gcds-text>
+
+      <gcds-heading tag="h2">Button</gcds-heading>
+
+      <component-display
+        class="mt-300"
+        attrs='[
+          {
+            "name": "button-id",
+            "control": "text",
+            "type": "string"
+          },
+          {
+            "name": "button-role",
+            "control": "select",
+            "type": "string",
+            "options": "[\"primary\", \"secondary\", \"danger\"]",
+            "defaultValue": "primary"
+          },
+          {
+            "name": "nope",
+            "control": "none"
+          }
+        ]'
+        slots='[
+          {
+            "name": "default",
+            "description": "The default slot allows inputting the button label."
+          }
+        ]'
+        events='[
+          {
+            "name": "gcdsBlur",
+            "description": "Custom event that fires when the element loses focus",
+            "details": "-"
+          },
+          {
+            "name": "gcdsFocus",
+            "description": "Custom event that fires when the element gains focus",
+            "details": "-"
+          }
+        ]'
+        accessibility
+        lang="en"
+      >
+        <gcds-button button-role="danger">Primary</gcds-button>
+      </component-display>
+
+      <gcds-heading tag="h2">Input</gcds-heading>
+
+      <component-display
+        class="mt-300 mb-700"
+        attrs='[
+          {
+            "name": "label",
+            "control": "text",
+            "type": "string"
+          },
+          {
+            "name": "input-id",
+            "control": "text",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "control": "select",
+            "type": "string",
+            "options": "[\"text\", \"email\", \"number\", \"url\", \"search\", \"password\"]",
+            "defaultValue": "text"
+          },
+          {
+            "name": "required",
+            "control": "select",
+            "type": "boolean",
+            "options": "[\"true\", \"false\"]",
+            "defaultValue": "false"
+          }
+        ]'
+        events='[
+          {
+            "name": "gcdsBlur",
+            "description": "Custom event that fires when the element loses focus",
+            "details": "-"
+          },
+          {
+            "name": "gcdsFocus",
+            "description": "Custom event that fires when the element gains focus",
+            "details": "-"
+          },
+          {
+            "name": "gcdsInput",
+            "description": "Custom event that fires when the element receives input",
+            "details": "-"
+          },
+          {
+            "name": "gcdsChange",
+            "description": "Custom event that fires when the element changes",
+            "details": "-"
+          }
+        ]'
+        accessibility
+      >
+        <gcds-input input-id="form-name" label="Name" hint="Please enter your full name."></gcds-input>
+      </component-display>
+
+      <gcds-heading tag="h2">Header</gcds-heading>
+
+      <component-display id="header-display" class="mb-400" accessibility>
+        <gcds-header>
+          <gcds-search slot="search"></gcds-search>
+          <gcds-topic-menu slot="menu"></gcds-topic-menu>
+          <gcds-breadcrumbs slot="breadcrumb">
+            <gcds-breadcrumbs-item href="#">Design System</gcds-breadcrumbs-item>
+            <gcds-breadcrumbs-item href="#">Components</gcds-breadcrumbs-item>
+          </gcds-breadcrumbs>
+        </gcds-header>
+      </component-display>
+
+      <script>
+        const headerDisplay = document.getElementById('header-display');
+
+        const headerAttrs = [
+          {
+            name: 'lang-href',
+            control: 'text',
+            type: 'string',
+          },
+          {
+            name: 'skip-to-href',
+            control: 'text',
+            type: 'string',
+          },
+          {
+            name: 'signature-has-link',
+            control: 'select',
+            type: 'boolean',
+            options: '["true", "false"]',
+            defaultValue: 'true',
+          },
+          {
+            name: 'signature-variant',
+            control: 'select',
+            type: 'boolean',
+            options: '["colour", "white"]',
+            defaultValue: 'colour',
+          },
+          {
+            name: 'lang',
+            type: 'string',
+            control: 'select',
+            options: '["en", "fr"]',
+            defaultValue: 'en',
+          },
+        ];
+
+        const headerSlots = [
+          {
+            name: 'menu',
+            description: 'Use this slot to add a menu to the header.',
+          },
+          {
+            name: 'breadcrumb',
+            description: 'Use this slot to add breadcrumbs to the header.',
+          },
+          {
+            name: 'search',
+            description: 'Use this slot to add a search to the header.',
+          },
+          {
+            name: 'toggle',
+            description: 'Use this slot to add a different language toggle to the header.',
+          },
+          {
+            name: 'banner',
+            description: 'Use this slot to add a banner to the header.',
+          },
+          {
+            name: 'skip-to-nav',
+            description: 'Use this slot to add a different skip-to-nav link to the header.',
+          },
+        ];
+
+        headerDisplay.attrs = headerAttrs;
+        headerDisplay.slots = headerSlots;
+      </script>
+    </gcds-container>
   </body>
 </html>

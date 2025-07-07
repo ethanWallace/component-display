@@ -1,0 +1,104 @@
+@layer default, display, code, tabs;
+
+@layer default {
+  :host {
+    display: block;
+
+    slot {
+      display: initial;
+    }
+  }
+}
+
+@layer display {
+  :host {
+    .display-frame {
+      padding: var(--gcds-spacing-350) var(--gcds-spacing-250);
+      border: var(--gcds-border-width-md) solid black;
+      margin-block-end: var(--gcds-spacing-300);
+    }
+  }
+}
+
+@layer code {
+  :host {
+    .code-frame {
+      border: var(--gcds-border-width-md) solid black;
+      width: 100%;
+      margin-block-end: var(--gcds-spacing-300);
+      position: relative;
+
+      .code-actions {
+        border-bottom: var(--gcds-border-width-md) solid black;
+        padding: var(--gcds-spacing-100);
+
+        gcds-button {
+          margin-inline-end: var(--gcds-spacing-100);
+        }
+      }
+    }
+  }
+}
+
+@layer tabs {
+  :host {
+    .hidden {
+      display: none;
+    }
+
+    #tabs {
+      border: var(--gcds-border-width-md) solid black;
+
+      [role="tablist"] {
+        [role="tab"]::part(button) {
+          border-bottom-right-radius: 0;
+          border-bottom-left-radius: 0;
+          margin: 0 var(--gcds-spacing-50);
+        }
+  
+        [aria-selected="true"]::part(button) {
+          background-color: var(--gcds-bg-primary);
+          color: white;
+        }
+      }
+  
+      #test-container {
+        clip-path: inset(100%);
+        clip: rect(1px, 1px, 1px, 1px);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+      }
+  
+      table {
+        border-top: var(--gcds-border-width-md) solid black;
+        width: 100%;
+  
+        th {
+          padding: var(--gcds-spacing-100) var(--gcds-spacing-50);
+          border-bottom: var(--gcds-border-width-sm) solid black;
+        }
+  
+        th, td {
+          text-align: left;
+        }
+  
+        &.attributes {
+          th,td {
+            width: 25%;
+          }
+        }
+      }
+
+      .tabs--accessibility {
+        padding: var(--gcds-spacing-100);
+
+        gcds-button {
+          margin: var(--gcds-spacing-300) 0;
+        }
+      }
+    }
+  }
+}
