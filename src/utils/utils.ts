@@ -24,3 +24,30 @@ export const closestElement = (selector, el) => {
 
   return null;
 };
+
+// Removes unwanted attributes from display element
+export const removeUnwantedAttributes = html => {
+  const regex = /\s*(aria-[a-z-]+|class|(?<!-)\brole\b)="[^"]*"/g;
+  return html.replace(regex, '');
+};
+
+export type AttributesType = {
+  name: string;
+  control: 'select' | 'text' | 'none';
+  options?: Array<string>;
+  required?: boolean;
+  defaultValue?: string;
+  type?: string;
+  onlyProperty?: boolean;
+};
+
+export type SlotType = {
+  name: string;
+  description: string;
+};
+
+export type EventType = {
+  name: string;
+  description: string;
+  details: string | object;
+};

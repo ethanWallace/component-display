@@ -5,9 +5,18 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AttributesType, EventType, SlotType } from "./components/component-display/component-display";
-export { AttributesType, EventType, SlotType } from "./components/component-display/component-display";
+import { Element } from "@stencil/core";
+import { AttributesType, EventType, SlotType } from "./utils/utils";
+export { Element } from "@stencil/core";
+export { AttributesType, EventType, SlotType } from "./utils/utils";
 export namespace Components {
+    interface AccessibilityTab {
+        "displayElement": Element;
+    }
+    interface AttributeTab {
+        "attributeObject": Array<AttributesType>;
+        "displayElement": Element;
+    }
     interface ComponentDisplay {
         /**
           * @default false
@@ -17,19 +26,93 @@ export namespace Components {
         "events"?: string | Array<EventType>;
         "slots"?: string | Array<SlotType>;
     }
+    interface EventsTab {
+        "eventObject": Array<EventType>;
+    }
+    interface SlotsTab {
+        "displayElement": Element;
+        "slotHistory": Object;
+        "slotObject": Array<SlotType>;
+    }
+}
+export interface AttributeTabCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAttributeTabElement;
+}
+export interface SlotsTabCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLSlotsTabElement;
 }
 declare global {
+    interface HTMLAccessibilityTabElement extends Components.AccessibilityTab, HTMLStencilElement {
+    }
+    var HTMLAccessibilityTabElement: {
+        prototype: HTMLAccessibilityTabElement;
+        new (): HTMLAccessibilityTabElement;
+    };
+    interface HTMLAttributeTabElementEventMap {
+        "attributeChange": Object;
+    }
+    interface HTMLAttributeTabElement extends Components.AttributeTab, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAttributeTabElementEventMap>(type: K, listener: (this: HTMLAttributeTabElement, ev: AttributeTabCustomEvent<HTMLAttributeTabElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAttributeTabElementEventMap>(type: K, listener: (this: HTMLAttributeTabElement, ev: AttributeTabCustomEvent<HTMLAttributeTabElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAttributeTabElement: {
+        prototype: HTMLAttributeTabElement;
+        new (): HTMLAttributeTabElement;
+    };
     interface HTMLComponentDisplayElement extends Components.ComponentDisplay, HTMLStencilElement {
     }
     var HTMLComponentDisplayElement: {
         prototype: HTMLComponentDisplayElement;
         new (): HTMLComponentDisplayElement;
     };
+    interface HTMLEventsTabElement extends Components.EventsTab, HTMLStencilElement {
+    }
+    var HTMLEventsTabElement: {
+        prototype: HTMLEventsTabElement;
+        new (): HTMLEventsTabElement;
+    };
+    interface HTMLSlotsTabElementEventMap {
+        "slotValueChange": Object;
+    }
+    interface HTMLSlotsTabElement extends Components.SlotsTab, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLSlotsTabElementEventMap>(type: K, listener: (this: HTMLSlotsTabElement, ev: SlotsTabCustomEvent<HTMLSlotsTabElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLSlotsTabElementEventMap>(type: K, listener: (this: HTMLSlotsTabElement, ev: SlotsTabCustomEvent<HTMLSlotsTabElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLSlotsTabElement: {
+        prototype: HTMLSlotsTabElement;
+        new (): HTMLSlotsTabElement;
+    };
     interface HTMLElementTagNameMap {
+        "accessibility-tab": HTMLAccessibilityTabElement;
+        "attribute-tab": HTMLAttributeTabElement;
         "component-display": HTMLComponentDisplayElement;
+        "events-tab": HTMLEventsTabElement;
+        "slots-tab": HTMLSlotsTabElement;
     }
 }
 declare namespace LocalJSX {
+    interface AccessibilityTab {
+        "displayElement": Element;
+    }
+    interface AttributeTab {
+        "attributeObject"?: Array<AttributesType>;
+        "displayElement": Element;
+        "onAttributeChange"?: (event: AttributeTabCustomEvent<Object>) => void;
+    }
     interface ComponentDisplay {
         /**
           * @default false
@@ -39,15 +122,32 @@ declare namespace LocalJSX {
         "events"?: string | Array<EventType>;
         "slots"?: string | Array<SlotType>;
     }
+    interface EventsTab {
+        "eventObject"?: Array<EventType>;
+    }
+    interface SlotsTab {
+        "displayElement": Element;
+        "onSlotValueChange"?: (event: SlotsTabCustomEvent<Object>) => void;
+        "slotHistory"?: Object;
+        "slotObject"?: Array<SlotType>;
+    }
     interface IntrinsicElements {
+        "accessibility-tab": AccessibilityTab;
+        "attribute-tab": AttributeTab;
         "component-display": ComponentDisplay;
+        "events-tab": EventsTab;
+        "slots-tab": SlotsTab;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "accessibility-tab": LocalJSX.AccessibilityTab & JSXBase.HTMLAttributes<HTMLAccessibilityTabElement>;
+            "attribute-tab": LocalJSX.AttributeTab & JSXBase.HTMLAttributes<HTMLAttributeTabElement>;
             "component-display": LocalJSX.ComponentDisplay & JSXBase.HTMLAttributes<HTMLComponentDisplayElement>;
+            "events-tab": LocalJSX.EventsTab & JSXBase.HTMLAttributes<HTMLEventsTabElement>;
+            "slots-tab": LocalJSX.SlotsTab & JSXBase.HTMLAttributes<HTMLSlotsTabElement>;
         }
     }
 }

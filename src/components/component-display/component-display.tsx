@@ -1,33 +1,10 @@
-import { Component, Host, h, Prop, Watch, Element, State } from '@stencil/core';
+import { Component, Host, h, Prop, Watch, Element, State, Listen } from '@stencil/core';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
 import prettier from 'prettier/standalone';
 import prettierPluginHTML from 'prettier/plugins/html';
-import axe from 'axe-core';
-import axeLocaleFr from 'axe-core/locales/fr.json';
 
-import { assignLanguage } from '../../utils/utils';
-
-export type AttributesType = {
-  name: string;
-  control: 'select' | 'text' | 'none';
-  options?: Array<string>;
-  required?: boolean;
-  defaultValue?: string;
-  type?: string;
-  onlyProperty?: boolean;
-};
-
-export type SlotType = {
-  name: string;
-  description: string;
-};
-
-export type EventType = {
-  name: string;
-  description: string;
-  details: string | object;
-};
+import { assignLanguage, removeUnwantedAttributes, AttributesType, SlotType, EventType } from '../../utils/utils';
 
 @Component({
   tag: 'component-display',
@@ -95,46 +72,29 @@ export class ComponentDisplay {
 
   @State() display: string = 'attrs';
   @State() showCode: boolean = true;
-  @State() axeResults: axe.AxeResults | null = null;
   @State() lang: string = 'en';
 
   private setDisplay(str) {
     this.display = str;
   }
 
-  /////// Attribute changes
-
-  private handleAttrInput = e => {
-    // this.displayElement[e.target.name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())] = e.target.value;
-    this.displayElement.setAttribute(e.target.name, e.target.value);
+  @Listen('attributeChange', { target: 'document' })
+  attributeChangeListener(e) {
+    this.displayElement.setAttribute(e.detail.name, e.detail.value);
     this.formatCodePreview();
-  };
+  }
 
-  /////// Slot changes
-
-  private handleSlotInput = e => {
-    if (e.target.name === 'default') {
-      this.displayElement.innerHTML = this.displayElement.innerHTML.replace(this.displayElement.innerHTML, e.target.value);
+  @Listen('slotValueChange', { target: 'document' })
+  slotValueChangeListener(e) {
+    if (e.detail.name === 'default') {
+      this.displayElement.innerHTML = this.displayElement.innerHTML.replace(this.displayElement.innerHTML, e.detail.value);
     }
 
-    this.displayElement.innerHTML = this.removeUnwantedAttributes(this.displayElement.innerHTML).replace(this.slotHistory[e.target.name], e.target.value);
+    this.displayElement.innerHTML = removeUnwantedAttributes(this.displayElement.innerHTML).replace(this.slotHistory[e.detail.name], e.detail.value);
 
-    this.slotHistory[e.target.name] = e.target.value;
+    this.slotHistory[e.detail.name] = e.detail.value;
 
     this.formatCodePreview();
-  };
-
-  private getSlotValue(name) {
-    if (name === 'default') {
-      return this.displayElement.innerHTML;
-    }
-
-    if (this.displayElement.querySelector(`[slot="${name}"]`)) {
-      this.slotHistory[name] = this.removeUnwantedAttributes(this.displayElement.querySelector(`[slot="${name}"]`)?.outerHTML);
-      return this.slotHistory[name];
-    }
-
-    return '';
   }
 
   //////// Code preview
@@ -158,13 +118,8 @@ export class ComponentDisplay {
     return importStatement + code;
   }
 
-  private removeUnwantedAttributes(html) {
-    const regex = /\s*(aria-[a-z-]+|class|(?<!-)\brole\b)="[^"]*"/g;
-    return html.replace(regex, '');
-  }
-
   private async formatCodePreview() {
-    const code = await prettier.format(this.removeUnwantedAttributes(this.el.innerHTML), { parser: 'html', plugins: [prettierPluginHTML] });
+    const code = await prettier.format(removeUnwantedAttributes(this.el.innerHTML), { parser: 'html', plugins: [prettierPluginHTML] });
     const react = this.convertToReact(code);
 
     this.htmlCodePreview.innerHTML = Prism.highlight(code, Prism.languages.html, 'html');
@@ -187,95 +142,6 @@ export class ComponentDisplay {
       }, 3000);
     }
     navigator.clipboard.writeText(code);
-  }
-
-  ////// Accesibility
-
-  private async runA11yTest() {
-    try {
-      const container = this.el.shadowRoot.getElementById('test-container');
-
-      container.innerHTML = this.displayElement.outerHTML;
-
-      setTimeout(async () => {
-        if (this.lang === 'fr') {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          axe.configure({ locale: axeLocaleFr });
-        }
-
-        this.axeResults = await axe.run(container);
-        console.log(this.axeResults);
-        console.log('Accessibility Violations:', this.axeResults.violations);
-
-        container.innerHTML = '';
-      }, 2000);
-    } catch (error) {
-      console.error('Error running accessibility tests:', error);
-      return null;
-    }
-  }
-
-  renderAxeResultsTable() {
-    if (this.axeResults && this.axeResults.violations.length > 0) {
-      return (
-        <table>
-          <thead>
-            <tr>
-              <th>Violation ID</th>
-              <th>Description</th>
-              <th>Affected Element(s)</th>
-              <th>Failure Summary</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.axeResults.violations.map(violation => (
-              <tr key={violation.id}>
-                <td>{violation.id}</td>
-                <td>{violation.description}</td>
-                <td>
-                  <ul>
-                    {violation.nodes.map((node, index) => (
-                      <li key={index}>
-                        <code>{node.html}</code>
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-                <td>
-                  <ul>
-                    {violation.nodes.map((node, index) => (
-                      <li key={index}>{node.failureSummary}</li>
-                    ))}
-                  </ul>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      );
-    } else if (this.axeResults) {
-      return (
-        <table>
-          <thead>
-            <tr>
-              <th>Test</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.axeResults.passes.map(pass => (
-              <tr key={pass.id}>
-                <td>{pass.id}</td>
-                <td>{pass.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      );
-    }
-
-    return null;
   }
 
   async componentWillLoad() {
@@ -368,140 +234,38 @@ export class ComponentDisplay {
             )}
           </div>
 
-          <div role="tabpanel" tabindex="0" class={this.display != 'attrs' && 'hidden'}>
-            <table class="attributes">
-              <tr>
-                <th>Attributes</th>
-                <th>Type</th>
-                <th>Default value</th>
-                <th>Control</th>
-              </tr>
-              {this.attributeObject &&
-                this.attributeObject.map(attr => {
-                  let control = '';
-
-                  const displayValue = this.displayElement.getAttribute(attr.name) != null ? this.displayElement.getAttribute(attr.name) : attr?.defaultValue;
-
-                  if (attr.control === 'select') {
-                    const options = JSON.parse(attr.options);
-                    // console.log(options);
-                    control = (
-                      <gcds-select
-                        label={attr.name}
-                        selectId={attr.name}
-                        name={attr.name}
-                        value={displayValue}
-                        onInput={e => this.handleAttrInput(e)}
-                        onChange={e => this.handleAttrInput(e)}
-                      >
-                        {options.map(option => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </gcds-select>
-                    );
-                  } else if (attr.control === 'text') {
-                    control = (
-                      <gcds-input
-                        name={attr.name}
-                        label={attr.name}
-                        inputId={attr.name}
-                        hide-label
-                        type="text"
-                        value={displayValue}
-                        onInput={e => this.handleAttrInput(e)}
-                        onChange={e => this.handleAttrInput(e)}
-                      ></gcds-input>
-                    );
-                  }
-
-                  return (
-                    <tr>
-                      <td>{attr.name}</td>
-                      <td>{attr.type}</td>
-                      <td>{attr?.defaultValue}</td>
-                      <td>{control}</td>
-                    </tr>
-                  );
-                })}
-            </table>
-          </div>
+          <attribute-tab
+            displayElement={this.displayElement}
+            attributeObject={this.attributeObject}
+            class={this.display != 'attrs' && 'hidden'}
+          ></attribute-tab>
 
           {this.slotObject && (
-            <div role="tabpanel" tabindex="0" class={this.display != 'slots' && 'hidden'}>
-              <table class="slots">
-                <caption>Slots allow passing text or HTML elements to the component.</caption>
-                <tr>
-                  <th>Slot name</th>
-                  <th>Description</th>
-                  <th>Control</th>
-                </tr>
-
-                {this.slotObject.map(slot => {
-                  const controlValue = this.getSlotValue(slot.name);
-                  const control = (
-                    <gcds-textarea label={slot.name} textareaId={slot.name} name={slot.name} hideLabel value={controlValue} onChange={e => this.handleSlotInput(e)}></gcds-textarea>
-                  );
-                  return (
-                    <tr>
-                      <td>{slot.name}</td>
-                      <td>{slot.description}</td>
-                      <td>{control}</td>
-                    </tr>
-                  );
-                })}
-              </table>
-            </div>
+            <slots-tab
+              displayElement={this.displayElement}
+              slotObject={this.slotObject}
+              slotHistory={this.slotHistory}
+              class={this.display != 'slots' && 'hidden'}
+            ></slots-tab>
           )}
 
           {this.eventObject && (
-            <div role="tabpanel" tabindex="0" class={this.display != 'events' && 'hidden'}>
-              <table class="events">
-                <caption>Custom events the component has</caption>
-                <tr>
-                  <th>Event name</th>
-                  <th>Description</th>
-                  <th>Details</th>
-                </tr>
-
-                {this.eventObject.map(event => {
-                  return (
-                    <tr class={event.name}>
-                      <td>{event.name}</td>
-                      <td>{event.description}</td>
-                      <td>{event.details}</td>
-                    </tr>
-                  );
-                })}
-              </table>
-            </div>
+            <events-tab
+              eventObject={this.eventObject}
+              class={this.display != 'events' && 'hidden'}
+            ></events-tab>
           )}
 
           {this.accessibility && (
-            <div role="tabpanel" tabindex="0" class={`tabs--accessibility${this.display != 'a11y' ? ' hidden' : ''}`}>
-              <gcds-button
-                button-role="secondary"
-                onClick={async () => {
-                  await this.runA11yTest();
-                }}
-              >
-                Run accessibility test
-              </gcds-button>
-
-              <p aria-live="polite">
-                {this.axeResults && this.axeResults.violations.length > 0
-                  ? `${this.axeResults.violations.length} issue(s) found. Please reference table below for more details.`
-                  : this.axeResults && `No issues found. Please reference table below to see passed tests.`}
-              </p>
-
-              <div id="test-container" class=""></div>
-
-              {this.renderAxeResultsTable()}
-            </div>
-          )}
+            <accessibility-tab
+              displayElement={this.displayElement}
+              class={`tabs--accessibility${this.display != 'a11y' ? ' hidden' : ''}`}
+              lang={this.lang}
+            ></accessibility-tab>
+          )
+          }
         </div>
-      </Host>
+      </Host >
     );
   }
 }

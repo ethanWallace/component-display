@@ -49,44 +49,36 @@
     #tabs {
       border: var(--gcds-border-width-md) solid black;
 
-      [role="tablist"] {
-        [role="tab"]::part(button) {
+      [role='tablist'] {
+        [role='tab']::part(button) {
           border-bottom-right-radius: 0;
           border-bottom-left-radius: 0;
           margin: 0 var(--gcds-spacing-50);
         }
-  
-        [aria-selected="true"]::part(button) {
+
+        [aria-selected='true']::part(button) {
           background-color: var(--gcds-bg-primary);
           color: white;
         }
       }
-  
-      #test-container {
-        clip-path: inset(100%);
-        clip: rect(1px, 1px, 1px, 1px);
-        height: 1px;
-        overflow: hidden;
-        position: absolute;
-        white-space: nowrap;
-        width: 1px;
-      }
-  
+
       table {
         border-top: var(--gcds-border-width-md) solid black;
         width: 100%;
-  
+
         th {
           padding: var(--gcds-spacing-100) var(--gcds-spacing-50);
           border-bottom: var(--gcds-border-width-sm) solid black;
         }
-  
-        th, td {
+
+        th,
+        td {
           text-align: left;
         }
-  
+
         &.attributes {
-          th,td {
+          th,
+          td {
             width: 25%;
           }
         }
