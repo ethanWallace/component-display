@@ -80,21 +80,25 @@ export class ComponentDisplay {
 
   @Listen('attributeChange', { target: 'document' })
   attributeChangeListener(e) {
-    this.displayElement.setAttribute(e.detail.name, e.detail.value);
-    this.formatCodePreview();
+    if (e.target === this.el) {
+      this.displayElement.setAttribute(e.detail.name, e.detail.value);
+      this.formatCodePreview();
+    }
   }
 
   @Listen('slotValueChange', { target: 'document' })
   slotValueChangeListener(e) {
-    if (e.detail.name === 'default') {
-      this.displayElement.innerHTML = this.displayElement.innerHTML.replace(this.displayElement.innerHTML, e.detail.value);
+    if (e.target === this.el) {
+      if (e.detail.name === 'default') {
+        this.displayElement.innerHTML = this.displayElement.innerHTML.replace(this.displayElement.innerHTML, e.detail.value);
+      }
+
+      this.displayElement.innerHTML = removeUnwantedAttributes(this.displayElement.innerHTML).replace(this.slotHistory[e.detail.name], e.detail.value);
+
+      this.slotHistory[e.detail.name] = e.detail.value;
+
+      this.formatCodePreview();
     }
-
-    this.displayElement.innerHTML = removeUnwantedAttributes(this.displayElement.innerHTML).replace(this.slotHistory[e.detail.name], e.detail.value);
-
-    this.slotHistory[e.detail.name] = e.detail.value;
-
-    this.formatCodePreview();
   }
 
   //////// Code preview

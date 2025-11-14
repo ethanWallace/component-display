@@ -59,7 +59,6 @@ export class AttributeTab {
                     name={attr.name}
                     value={displayValue}
                     onInput={(e) => this.formatEventDetail(e)}
-                    onChange={(e) => this.formatEventDetail(e)}
                   >
                     {typeof options === 'object' && options.map(option => (
                       <option key={option} value={option}>
@@ -78,7 +77,6 @@ export class AttributeTab {
                     type="text"
                     value={displayValue}
                     onInput={(e) => this.formatEventDetail(e)}
-                    onChange={(e) => this.formatEventDetail(e)}
                   ></gcds-input>
                 );
               }
