@@ -1,0 +1,38 @@
+# attribute-tab
+
+
+
+<!-- Auto Generated Below -->
+
+
+## Properties
+
+| Property                      | Attribute          | Description | Type               | Default     |
+| ----------------------------- | ------------------ | ----------- | ------------------ | ----------- |
+| `attributeObject`             | `attribute-object` |             | `AttributesType[]` | `undefined` |
+| `displayElement` _(required)_ | `display-element`  |             | `Element`          | `undefined` |
+
+
+## Events
+
+| Event             | Description | Type                  |
+| ----------------- | ----------- | --------------------- |
+| `attributeChange` |             | `CustomEvent<Object>` |
+
+
+## Dependencies
+
+### Used by
+
+ - [component-display](../component-display)
+
+### Graph
+```mermaid
+graph TD;
+  component-display --> attribute-tab
+  style attribute-tab fill:#f9f,stroke:#333,stroke-width:4px
+```
+
+----------------------------------------------
+
+*Built with [StencilJS](https://stenciljs.com/)*

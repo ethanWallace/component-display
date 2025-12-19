@@ -15,6 +15,25 @@
 | `slots`         | `slots`         |             | `SlotType[] \| string`       | `undefined` |
 
 
+## Dependencies
+
+### Depends on
+
+- [attribute-tab](../attribute-tab)
+- [slots-tab](../slots-tab)
+- [events-tab](../events-tab)
+- [accessibility-tab](../accessibility-tab)
+
+### Graph
+```mermaid
+graph TD;
+  component-display --> attribute-tab
+  component-display --> slots-tab
+  component-display --> events-tab
+  component-display --> accessibility-tab
+  style component-display fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*
