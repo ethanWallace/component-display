@@ -47,11 +47,10 @@ export class SlotsTab {
         this.slotErrors = { ...this.slotErrors, [name]: 'The slot content contains invalid or unsafe HTML and has been sanitized.' };
         return;
       }
-    } else {
-      // clear error for that slot
-      const { [name]: _, ...rest } = this.slotErrors;
-      this.slotErrors = rest;
     }
+
+    // clear error for that slot
+    this.slotErrors = { ...this.slotErrors, [name]: '' };
 
     const eventDetail = {
       name,
