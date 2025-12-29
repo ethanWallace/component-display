@@ -1,6 +1,7 @@
 import { Component, Host, h, Element, Prop, Event, EventEmitter, State } from '@stencil/core';
+import DOMPurify from 'dompurify';
 
-import { assignLanguage, removeUnwantedAttributes, SlotType } from '../../utils/utils';
+import { assignLanguage, SlotType } from '../../utils/utils';
 
 @Component({
   tag: 'slots-tab',
@@ -17,30 +18,50 @@ export class SlotsTab {
   @Event() slotValueChange!: EventEmitter<Object>;
 
   @State() lang: string = 'en';
+  @State() slotErrors: { [k: string]: string } = {};
 
-  private getSlotValue(name) {
-    if (name === 'default') {
-      return this.displayElement.innerHTML;
+  /*
+  * Sanitize and emit slot change event
+  */
+  private emitSlotEvent(e) {
+    const sanitizedValue = DOMPurify.sanitize(e.target.value, {
+      CUSTOM_ELEMENT_HANDLING: {
+        tagNameCheck: /^gcds-/,
+        attributeNameCheck: /.*/,
+        allowCustomizedBuiltInElements: false,
+      },
+      ADD_ATTR: ['slot'],
+    });
+
+    const textarea = e.target as HTMLGcdsTextareaElement;
+    const name = textarea.name;
+
+    // Prevent emitting invalid slot content for slots
+    if (textarea.value.trim() !== '') {
+      // Check if the slot content includes the correct slot attribute
+      if (name !== 'default' && !textarea.value.includes(`slot="${name}"`)) {
+        this.slotErrors = { ...this.slotErrors, [name]: `Content for the "${name}" slot must include the attribute slot="${name}".` };
+        return;
+      }
+      if (sanitizedValue !== textarea.value) {
+        this.slotErrors = { ...this.slotErrors, [name]: 'The slot content contains invalid or unsafe HTML and has been sanitized.' };
+        return;
+      }
+    } else {
+      // clear error for that slot
+      const { [name]: _, ...rest } = this.slotErrors;
+      this.slotErrors = rest;
     }
 
-    if (this.displayElement.querySelector(`[slot="${name}"]`)) {
-      this.slotHistory[name] = removeUnwantedAttributes(this.displayElement.querySelector(`[slot="${name}"]`)?.outerHTML);
-      return this.slotHistory[name];
-    }
-
-    return '';
-  }
-
-  private formatEventDetail(e) {
     const eventDetail = {
-      name: e.target.name,
-      value: e.target.value,
+      name,
+      value: sanitizedValue,
     }
 
     this.slotValueChange.emit(eventDetail);
   }
 
-  async ComponentWillLoad() {
+  async componentWillLoad() {
     this.lang = assignLanguage(this.el);
   }
 
@@ -51,7 +72,7 @@ export class SlotsTab {
         tabindex="0"
       >
         <table class="slots">
-          <caption>Slots allow passing text or HTML elements to the component.</caption>
+          <caption>Slots allow passing text or HTML elements to the component. Modify the HTML values to update the displayed component.</caption>
           <tr>
             <th>Slot name</th>
             <th>Description</th>
@@ -59,15 +80,17 @@ export class SlotsTab {
           </tr>
 
           {this.slotObject.map(slot => {
-            const controlValue = this.getSlotValue(slot.name);
             const control = (
               <gcds-textarea
                 label={slot.name}
                 textareaId={slot.name}
                 name={slot.name}
                 hideLabel
-                value={controlValue}
-                onChange={e => this.formatEventDetail(e)}
+                value={this.slotHistory[slot.name]}
+                error-message={this.slotErrors[slot.name]}
+                validate-on="other"
+                onChange={e => this.emitSlotEvent(e)}
+                lang={this.lang}
               ></gcds-textarea>
             );
             return (

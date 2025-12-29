@@ -14,7 +14,7 @@ export class EventsTab {
 
   @State() lang: string = 'en';
 
-  async ComponentWillLoad() {
+  async componentWillLoad() {
     this.lang = assignLanguage(this.el);
   }
 

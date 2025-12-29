@@ -20,7 +20,7 @@ export class ComponentDisplay {
   private copyHTMLButton?: HTMLElement;
   private copyReactButton?: HTMLElement;
 
-  private slotHistory: object = {};
+  private slotHistory: object = [];
 
   private attributeObject;
   private slotObject;
@@ -50,6 +50,17 @@ export class ComponentDisplay {
     } else if (typeof this.slots == 'string') {
       this.slotObject = JSON.parse(this.slots);
     }
+
+    this.slotObject?.forEach(slot => {
+      if (slot.name === 'default') {
+        this.slotHistory[slot.name] = this.displayElement.innerHTML;
+      } else {
+        this.slotHistory[slot.name] = this.displayElement.querySelector(`[slot="${slot.name}"]`) ?
+          removeUnwantedAttributes(this.displayElement.querySelector(`[slot="${slot.name}"]`)?.outerHTML)
+          :
+          '';
+      }
+    });
   }
 
   /*
@@ -89,16 +100,21 @@ export class ComponentDisplay {
   @Listen('slotValueChange', { target: 'document' })
   slotValueChangeListener(e) {
     if (e.target === this.el) {
-      if (e.detail.name === 'default') {
-        this.displayElement.innerHTML = this.displayElement.innerHTML.replace(this.displayElement.innerHTML, e.detail.value);
-      }
-
-      this.displayElement.innerHTML = removeUnwantedAttributes(this.displayElement.innerHTML).replace(this.slotHistory[e.detail.name], e.detail.value);
-
       this.slotHistory[e.detail.name] = e.detail.value;
 
+      this.renderSlotContent();
       this.formatCodePreview();
     }
+  }
+
+  // Add slot content to the component display
+  private renderSlotContent() {
+    this.displayElement.innerHTML = '';
+
+    Object.keys(this.slotHistory).forEach(slotName => {
+      this.displayElement.innerHTML += `
+      ${this.slotHistory[slotName]}`;
+    });
   }
 
   //////// Code preview
@@ -123,7 +139,13 @@ export class ComponentDisplay {
   }
 
   private async formatCodePreview() {
-    const code = await prettier.format(removeUnwantedAttributes(this.el.innerHTML), { parser: 'html', plugins: [prettierPluginHTML] });
+    const code = await prettier.format(
+      removeUnwantedAttributes(this.el.innerHTML),
+      {
+        parser: 'html',
+        plugins: [prettierPluginHTML],
+      }
+    );
     const react = this.convertToReact(code);
 
     this.htmlCodePreview.innerHTML = Prism.highlight(code, Prism.languages.html, 'html');
@@ -151,12 +173,11 @@ export class ComponentDisplay {
   async componentWillLoad() {
     // Define lang attribute
     this.lang = assignLanguage(this.el);
+    this.displayElement = this.el.children[0];
 
     this.validateAttrs();
     this.validateSlots();
     this.validateEvents();
-
-    this.displayElement = this.el.children[0];
   }
 
   async componentDidLoad() {
@@ -166,7 +187,9 @@ export class ComponentDisplay {
   render() {
     return (
       <Host>
-        <div class="display-frame">
+        <div
+          class="display-frame"
+        >
           <slot></slot>
         </div>
 

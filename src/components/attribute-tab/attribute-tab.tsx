@@ -26,7 +26,7 @@ export class AttributeTab {
     this.attributeChange.emit(eventDetail);
   }
 
-  async ComponentWillLoad() {
+  async componentWillLoad() {
     this.lang = assignLanguage(this.el);
   }
 
@@ -58,6 +58,7 @@ export class AttributeTab {
                     selectId={attr.name}
                     name={attr.name}
                     value={displayValue}
+                    hide-label
                     onInput={(e) => this.formatEventDetail(e)}
                   >
                     {typeof options === 'object' && options.map(option => (

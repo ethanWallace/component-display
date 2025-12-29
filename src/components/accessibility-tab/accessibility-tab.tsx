@@ -116,7 +116,7 @@ export class AccessibilityTab {
     return null;
   }
 
-  async ComponentWillLoad() {
+  async componentWillLoad() {
     this.lang = assignLanguage(this.el);
   }
 
