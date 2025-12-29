@@ -239,59 +239,65 @@ export class ComponentDisplay {
           </div>
         </div>
 
-        <div id="tabs">
-          <div role="tablist">
-            <gcds-button id="attributes" button-role="secondary" role="tab" onClick={() => this.setDisplay('attrs')} aria-selected={this.display === 'attrs' ? 'true' : 'false'}>
-              Attributes & properties
-            </gcds-button>
+        {this.attributeObject || this.slotObject || this.eventObject || this.accessibility ? (
+          <div id="tabs">
+            <div role="tablist">
+              {this.attributeObject && (
+                <gcds-button id="attributes" button-role="secondary" role="tab" onClick={() => this.setDisplay('attrs')} aria-selected={this.display === 'attrs' ? 'true' : 'false'}>
+                  Attributes & properties
+                </gcds-button>
+              )}
+              {this.slotObject && (
+                <gcds-button id="slots" button-role="secondary" role="tab" onClick={() => this.setDisplay('slots')} aria-selected={this.display === 'slots' ? 'true' : 'false'}>
+                  Slots
+                </gcds-button>
+              )}
+              {this.eventObject && (
+                <gcds-button id="events" button-role="secondary" role="tab" onClick={() => this.setDisplay('events')} aria-selected={this.display === 'events' ? 'true' : 'false'}>
+                  Events
+                </gcds-button>
+              )}
+              {this.accessibility && (
+                <gcds-button id="a11y" button-role="secondary" role="tab" onClick={() => this.setDisplay('a11y')} aria-selected={this.display === 'a11y' ? 'true' : 'false'}>
+                  Accessibility
+                </gcds-button>
+              )}
+            </div>
+
+            {this.attributeObject && (
+              <attribute-tab
+                displayElement={this.displayElement}
+                attributeObject={this.attributeObject}
+                class={this.display != 'attrs' && 'hidden'}
+              ></attribute-tab>
+            )}
+
             {this.slotObject && (
-              <gcds-button id="slots" button-role="secondary" role="tab" onClick={() => this.setDisplay('slots')} aria-selected={this.display === 'slots' ? 'true' : 'false'}>
-                Slots
-              </gcds-button>
+              <slots-tab
+                displayElement={this.displayElement}
+                slotObject={this.slotObject}
+                slotHistory={this.slotHistory}
+                class={this.display != 'slots' && 'hidden'}
+              ></slots-tab>
             )}
+
             {this.eventObject && (
-              <gcds-button id="events" button-role="secondary" role="tab" onClick={() => this.setDisplay('events')} aria-selected={this.display === 'events' ? 'true' : 'false'}>
-                Events
-              </gcds-button>
+              <events-tab
+                eventObject={this.eventObject}
+                class={this.display != 'events' && 'hidden'}
+              ></events-tab>
             )}
+
             {this.accessibility && (
-              <gcds-button id="a11y" button-role="secondary" role="tab" onClick={() => this.setDisplay('a11y')} aria-selected={this.display === 'a11y' ? 'true' : 'false'}>
-                Accessibility
-              </gcds-button>
-            )}
+              <accessibility-tab
+                displayElement={this.displayElement}
+                class={`tabs--accessibility${this.display != 'a11y' ? ' hidden' : ''}`}
+                lang={this.lang}
+              ></accessibility-tab>
+            )
+            }
           </div>
-
-          <attribute-tab
-            displayElement={this.displayElement}
-            attributeObject={this.attributeObject}
-            class={this.display != 'attrs' && 'hidden'}
-          ></attribute-tab>
-
-          {this.slotObject && (
-            <slots-tab
-              displayElement={this.displayElement}
-              slotObject={this.slotObject}
-              slotHistory={this.slotHistory}
-              class={this.display != 'slots' && 'hidden'}
-            ></slots-tab>
-          )}
-
-          {this.eventObject && (
-            <events-tab
-              eventObject={this.eventObject}
-              class={this.display != 'events' && 'hidden'}
-            ></events-tab>
-          )}
-
-          {this.accessibility && (
-            <accessibility-tab
-              displayElement={this.displayElement}
-              class={`tabs--accessibility${this.display != 'a11y' ? ' hidden' : ''}`}
-              lang={this.lang}
-            ></accessibility-tab>
-          )
-          }
-        </div>
+        ) : null}
       </Host >
     );
   }
