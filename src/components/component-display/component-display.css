@@ -66,6 +66,11 @@
         border-top: var(--gcds-border-width-md) solid black;
         width: 100%;
 
+        caption {
+          text-align: left;
+          font: var(--gcds-font-text-mono);
+        }
+
         th {
           padding: var(--gcds-spacing-100) var(--gcds-spacing-50);
           border-bottom: var(--gcds-border-width-sm) solid black;

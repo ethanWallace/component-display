@@ -33,9 +33,9 @@ A table showing the available slots in the component with a textarea able to mod
 
 #### Slots todo
 
-- [ ] Rewrite the slot changing logic (it was done quickly)
-- [ ] Only allow HTML to be entered if it contains `slot="<name>"` in textarea
-- [ ] HTML sanitization
+- [X] Rewrite the slot changing logic (it was done quickly)
+- [X] Only allow HTML to be entered if it contains `slot="<name>"` in textarea
+- [X] HTML sanitization
 
 ### Events
 
