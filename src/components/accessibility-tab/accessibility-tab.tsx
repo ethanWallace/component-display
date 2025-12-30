@@ -39,9 +39,13 @@ export class AccessibilityTab {
 
       setTimeout(async () => {
         if (this.lang === 'fr') {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          axe.configure({ locale: axeLocaleFr });
+          if (this.landmarkDisplay) {
+            closestElement('component-display', this.el).shadowRoot.querySelector('iframe').contentWindow!.axe.configure({ locale: axeLocaleFr });
+          } else {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            axe.configure({ locale: axeLocaleFr });
+          }
         }
 
         // Test on component inside iframe
