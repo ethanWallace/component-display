@@ -4,7 +4,7 @@ import 'prismjs/components/prism-jsx';
 import prettier from 'prettier/standalone';
 import prettierPluginHTML from 'prettier/plugins/html';
 
-import { assignLanguage, removeUnwantedAttributes, AttributesType, SlotType, EventType } from '../../utils/utils';
+import { assignLanguage, removeUnwantedAttributes, AttributesType, SlotType, EventType, formatSrcDoc } from '../../utils/utils';
 
 @Component({
   tag: 'component-display',
@@ -15,6 +15,7 @@ export class ComponentDisplay {
   @Element() el: HTMLElement;
 
   private displayElement?: Element;
+  private landmarkIframe?: HTMLIFrameElement;
   private htmlCodePreview?: HTMLElement;
   private reactCodePreview?: HTMLElement;
   private copyHTMLButton?: HTMLElement;
@@ -81,6 +82,11 @@ export class ComponentDisplay {
    */
   @Prop() accessibility?: boolean = false;
 
+  /*
+   * Display landmark elements in iframe
+   */
+  @Prop() landmarkDisplay?: boolean = false;
+
   @State() display: string = 'attrs';
   @State() showCode: boolean = true;
   @State() lang: string = 'en';
@@ -94,6 +100,14 @@ export class ComponentDisplay {
     if (e.target === this.el) {
       this.displayElement.setAttribute(e.detail.name, e.detail.value);
       this.formatCodePreview();
+
+      if (this.landmarkDisplay && this.landmarkIframe) {
+        this.landmarkIframe.srcdoc = formatSrcDoc(
+          this.displayElement.outerHTML,
+          this.accessibility,
+          this.lang
+        );
+      }
     }
   }
 
@@ -104,6 +118,14 @@ export class ComponentDisplay {
 
       this.renderSlotContent();
       this.formatCodePreview();
+
+      if (this.landmarkDisplay && this.landmarkIframe) {
+        this.landmarkIframe.srcdoc = formatSrcDoc(
+          this.displayElement.outerHTML,
+          this.accessibility,
+          this.lang
+        );
+      }
     }
   }
 
@@ -117,7 +139,7 @@ export class ComponentDisplay {
     });
   }
 
-  //////// Code preview
+  // Code preview
 
   private convertToReact(str) {
     const react = str.replace(/"([^"]*)"|(\b[a-z]+(?:-[a-z]+)+\b)/g, (match, quoted, kebab) => {
@@ -181,6 +203,14 @@ export class ComponentDisplay {
   }
 
   async componentDidLoad() {
+    if (this.landmarkDisplay && this.landmarkIframe) {
+      this.landmarkIframe.srcdoc = formatSrcDoc(
+        this.displayElement.outerHTML,
+        this.accessibility,
+        this.lang
+      );
+    }
+
     this.formatCodePreview();
   }
 
@@ -190,7 +220,15 @@ export class ComponentDisplay {
         <div
           class="display-frame"
         >
-          <slot></slot>
+          {this.landmarkDisplay ?
+            <iframe
+              class="landmark-iframe"
+              title="Landmark elements display"
+              ref={element => (this.landmarkIframe = element as HTMLIFrameElement)}
+            ></iframe>
+            :
+            <slot></slot>
+          }
         </div>
 
         <div class="code-frame">
@@ -292,6 +330,7 @@ export class ComponentDisplay {
               <accessibility-tab
                 displayElement={this.displayElement}
                 class={`tabs--accessibility${this.display != 'a11y' ? ' hidden' : ''}`}
+                landmarkDisplay={this.landmarkDisplay}
                 lang={this.lang}
               ></accessibility-tab>
             )

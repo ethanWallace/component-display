@@ -2,7 +2,7 @@ import { Component, Host, h, State, Element, Prop } from '@stencil/core';
 import axe from 'axe-core';
 import axeLocaleFr from 'axe-core/locales/fr.json';
 
-import { assignLanguage } from '../../utils/utils';
+import { assignLanguage, closestElement } from '../../utils/utils';
 
 @Component({
   tag: 'accessibility-tab',
@@ -13,6 +13,7 @@ export class AccessibilityTab {
   @Element() el: HTMLElement;
 
   @Prop() displayElement!: Element;
+  @Prop() landmarkDisplay?: boolean;
 
   @State() axeResults: axe.AxeResults | null = null;
   @State() testRunning: boolean = false;
@@ -27,9 +28,14 @@ export class AccessibilityTab {
     this.testRunning = true;
 
     try {
-      const container = this.el.querySelector('#test-container');
+      const container = this.landmarkDisplay ?
+        closestElement('component-display', this.el).shadowRoot.querySelector('iframe').contentWindow.document.body
+        :
+        this.el.querySelector('#test-container');
 
-      container.innerHTML = this.displayElement.outerHTML;
+      if (!this.landmarkDisplay) {
+        container.innerHTML = this.displayElement.outerHTML;
+      }
 
       setTimeout(async () => {
         if (this.lang === 'fr') {
@@ -38,11 +44,16 @@ export class AccessibilityTab {
           axe.configure({ locale: axeLocaleFr });
         }
 
-        this.axeResults = await axe.run(container);
-        console.log(this.axeResults);
-        console.log('Accessibility Violations:', this.axeResults.violations);
+        // Test on component inside iframe
+        if (this.landmarkDisplay) {
+          this.axeResults = await closestElement('component-display', this.el).shadowRoot.querySelector('iframe').contentWindow!.axe.run(container);
+        } else {
+          this.axeResults = await axe.run(container);
+        }
 
-        container.innerHTML = '';
+        if (!this.landmarkDisplay) {
+          container.innerHTML = '';
+        }
       }, 2000);
     } catch (error) {
       console.error('Error running accessibility tests:', error);

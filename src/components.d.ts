@@ -12,6 +12,7 @@ export { AttributesType, EventType, SlotType } from "./utils/utils";
 export namespace Components {
     interface AccessibilityTab {
         "displayElement": Element;
+        "landmarkDisplay"?: boolean;
     }
     interface AttributeTab {
         "attributeObject": Array<AttributesType>;
@@ -24,6 +25,10 @@ export namespace Components {
         "accessibility"?: boolean;
         "attrs"?: string | Array<AttributesType>;
         "events"?: string | Array<EventType>;
+        /**
+          * @default false
+         */
+        "landmarkDisplay"?: boolean;
         "slots"?: string | Array<SlotType>;
     }
     interface EventsTab {
@@ -107,6 +112,7 @@ declare global {
 declare namespace LocalJSX {
     interface AccessibilityTab {
         "displayElement": Element;
+        "landmarkDisplay"?: boolean;
     }
     interface AttributeTab {
         "attributeObject"?: Array<AttributesType>;
@@ -120,6 +126,10 @@ declare namespace LocalJSX {
         "accessibility"?: boolean;
         "attrs"?: string | Array<AttributesType>;
         "events"?: string | Array<EventType>;
+        /**
+          * @default false
+         */
+        "landmarkDisplay"?: boolean;
         "slots"?: string | Array<SlotType>;
     }
     interface EventsTab {
