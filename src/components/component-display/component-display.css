@@ -10,36 +10,6 @@
   }
 }
 
-@layer display {
-  :host {
-    .display-frame {
-      padding: var(--gcds-spacing-350) var(--gcds-spacing-250);
-      border: var(--gcds-border-width-md) solid black;
-      margin-block-end: var(--gcds-spacing-300);
-    }
-  }
-}
-
-@layer code {
-  :host {
-    .code-frame {
-      border: var(--gcds-border-width-md) solid black;
-      width: 100%;
-      margin-block-end: var(--gcds-spacing-300);
-      position: relative;
-
-      .code-actions {
-        border-bottom: var(--gcds-border-width-md) solid black;
-        padding: var(--gcds-spacing-100);
-
-        gcds-button {
-          margin-inline-end: var(--gcds-spacing-100);
-        }
-      }
-    }
-  }
-}
-
 @layer tabs {
   :host {
     .hidden {
