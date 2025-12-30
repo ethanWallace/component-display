@@ -89,7 +89,6 @@ export class ComponentDisplay {
   attributeChangeListener(e) {
     if (e.target === this.el) {
       this.displayElement.setAttribute(e.detail.name, e.detail.value);
-      this.formatCodePreview();
     }
   }
 
