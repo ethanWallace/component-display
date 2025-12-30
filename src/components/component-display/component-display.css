@@ -17,7 +17,7 @@
     }
 
     #tabs {
-      border: var(--gcds-border-width-md) solid black;
+      border: var(--gcds-border-width-md) solid var(--gcds-border-default);
 
       [role='tablist'] {
         [role='tab']::part(button) {
@@ -33,22 +33,35 @@
       }
 
       table {
-        border-top: var(--gcds-border-width-md) solid black;
         width: 100%;
+        font: var(--gcds-font-text-small);
+        border: var(--gcds-border-width-md) solid var(--gcds-border-default);
+        border-collapse: collapse;
+        margin: -2px 0 0;
+
+        @media only screen and (width < 48em) {
+          font: var(--gcds-font-text-small-mobile);
+        }
 
         caption {
           text-align: left;
           font: var(--gcds-font-text-mono);
         }
 
-        th {
-          padding: var(--gcds-spacing-100) var(--gcds-spacing-50);
-          border-bottom: var(--gcds-border-width-sm) solid black;
-        }
-
         th,
         td {
+          border-block-end: var(--gcds-border-width-sm) solid var(--gcds-border-default);
+          padding: var(--gcds-spacing-150) var(--gcds-spacing-225);
           text-align: left;
+        }
+
+        gcds-input {
+          --gcds-input-margin: 0;
+        }
+
+        gcds-select {
+          --gcds-select-min-width-and-height: 100%;
+          --gcds-select-margin: 0;
         }
 
         &.attributes {

@@ -80,6 +80,7 @@ export class ComponentDisplay {
 
   @State() display: 'attrs' | 'slots' | 'events' | 'a11y' = 'attrs';
   @State() lang = 'en';
+  @State() codeSource = '';
 
   /* ---------------------------
    * Listeners
@@ -89,6 +90,7 @@ export class ComponentDisplay {
   attributeChangeListener(e) {
     if (e.target === this.el) {
       this.displayElement.setAttribute(e.detail.name, e.detail.value);
+      this.updateCodePreview();
     }
   }
 
@@ -97,6 +99,7 @@ export class ComponentDisplay {
     if (e.target === this.el) {
       this.slotHistory[e.detail.name] = e.detail.value;
       this.renderSlotContent();
+      this.updateCodePreview();
     }
   }
 
@@ -104,13 +107,16 @@ export class ComponentDisplay {
    * Lifecycle
    * --------------------------- */
 
-  componentWillLoad() {
+  async componentWillLoad() {
+    // Define lang attribute
     this.lang = assignLanguage(this.el);
     this.displayElement = this.el.children[0];
 
     this.validateAttrs();
     this.validateSlots();
     this.validateEvents();
+
+    this.updateCodePreview();
   }
 
   /* ---------------------------
@@ -126,8 +132,8 @@ export class ComponentDisplay {
     });
   }
 
-  private getCodeSource() {
-    return removeUnwantedAttributes(this.el.innerHTML);
+  private updateCodePreview() {
+    this.codeSource = removeUnwantedAttributes(this.el.innerHTML);
   }
 
   private setDisplay(tab: typeof this.display) {
@@ -142,52 +148,57 @@ export class ComponentDisplay {
     return (
       <Host>
         {/* Component + code preview */}
-        <code-frame source={this.getCodeSource()}>
+        <code-frame source={this.codeSource}>
           <slot></slot>
         </code-frame>
 
         {/* Tabs */}
-        {(this.attributeObject || this.slotObject || this.eventObject || this.accessibility) && (
+        {this.attributeObject || this.slotObject || this.eventObject || this.accessibility ? (
           <div id="tabs">
             <div role="tablist">
               {this.attributeObject && (
-                <gcds-button button-role="secondary" role="tab" aria-selected={this.display === 'attrs'} onClick={() => this.setDisplay('attrs')}>
+                <gcds-button
+                  id="attributes"
+                  button-role="secondary"
+                  role="tab"
+                  onClick={() => this.setDisplay('attrs')}
+                  aria-selected={this.display === 'attrs' ? 'true' : 'false'}
+                >
                   Attributes & properties
                 </gcds-button>
               )}
-
               {this.slotObject && (
-                <gcds-button button-role="secondary" role="tab" aria-selected={this.display === 'slots'} onClick={() => this.setDisplay('slots')}>
+                <gcds-button id="slots" button-role="secondary" role="tab" onClick={() => this.setDisplay('slots')} aria-selected={this.display === 'slots' ? 'true' : 'false'}>
                   Slots
                 </gcds-button>
               )}
-
               {this.eventObject && (
-                <gcds-button button-role="secondary" role="tab" aria-selected={this.display === 'events'} onClick={() => this.setDisplay('events')}>
+                <gcds-button id="events" button-role="secondary" role="tab" onClick={() => this.setDisplay('events')} aria-selected={this.display === 'events' ? 'true' : 'false'}>
                   Events
                 </gcds-button>
               )}
-
               {this.accessibility && (
-                <gcds-button button-role="secondary" role="tab" aria-selected={this.display === 'a11y'} onClick={() => this.setDisplay('a11y')}>
+                <gcds-button id="a11y" button-role="secondary" role="tab" onClick={() => this.setDisplay('a11y')} aria-selected={this.display === 'a11y' ? 'true' : 'false'}>
                   Accessibility
                 </gcds-button>
               )}
             </div>
 
-            {this.attributeObject && <attribute-tab displayElement={this.displayElement} attributeObject={this.attributeObject} class={this.display !== 'attrs' && 'hidden'} />}
+            {this.attributeObject && (
+              <attribute-tab displayElement={this.displayElement} attributeObject={this.attributeObject} class={this.display != 'attrs' && 'hidden'}></attribute-tab>
+            )}
 
             {this.slotObject && (
-              <slots-tab displayElement={this.displayElement} slotObject={this.slotObject} slotHistory={this.slotHistory} class={this.display !== 'slots' && 'hidden'} />
+              <slots-tab displayElement={this.displayElement} slotObject={this.slotObject} slotHistory={this.slotHistory} class={this.display != 'slots' && 'hidden'}></slots-tab>
             )}
 
-            {this.eventObject && <events-tab eventObject={this.eventObject} class={this.display !== 'events' && 'hidden'} />}
+            {this.eventObject && <events-tab eventObject={this.eventObject} class={this.display != 'events' && 'hidden'}></events-tab>}
 
             {this.accessibility && (
-              <accessibility-tab displayElement={this.displayElement} lang={this.lang} class={`tabs--accessibility${this.display !== 'a11y' ? ' hidden' : ''}`} />
+              <accessibility-tab displayElement={this.displayElement} class={`tabs--accessibility${this.display != 'a11y' ? ' hidden' : ''}`} lang={this.lang}></accessibility-tab>
             )}
           </div>
-        )}
+        ) : null}
       </Host>
     );
   }
