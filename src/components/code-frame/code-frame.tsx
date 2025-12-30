@@ -10,7 +10,18 @@ import prettierPluginHTML from 'prettier/plugins/html';
   shadow: true,
 })
 export class CodeFrame {
+  /* ---------------------------
+   * Props
+   * --------------------------- */
+
+  /*
+   * Source HTML code to be formatted and highlighted
+   */
   @Prop() source: string;
+
+  /* ---------------------------
+   * State
+   * --------------------------- */
 
   @State() showCode = true;
   @State() activeFormat: 'html' | 'react' = 'html';
@@ -20,15 +31,30 @@ export class CodeFrame {
 
   private codeEl?: HTMLElement;
 
+  /* ---------------------------
+   * Watchers
+   * --------------------------- */
+
   @Watch('source')
   async onSourceChange() {
     await this.formatCodePreview();
   }
 
+  /* ---------------------------
+   * Lifecycle
+   * --------------------------- */
+
   componentDidLoad() {
     this.formatCodePreview();
   }
 
+  /* ---------------------------
+   * Helpers
+   * --------------------------- */
+
+  /*
+   * Converts HTML code to React JSX code
+   */
   private convertToReact(html: string) {
     const react = html.replace(/"([^"]*)"|(\b[a-z]+(?:-[a-z]+)+\b)/g, (match, quoted, kebab) => {
       if (quoted) return `"${quoted}"`;
@@ -50,6 +76,9 @@ export class CodeFrame {
     return importStatement + code;
   }
 
+  /*
+   * Formats the source code and applies syntax highlighting
+   */
   private async formatCodePreview() {
     if (!this.source) return;
 
@@ -66,6 +95,9 @@ export class CodeFrame {
     this.updateDisplayedCode();
   }
 
+  /*
+   * Updates the displayed code based on the active format (HTML or React)
+   */
   private updateDisplayedCode() {
     if (!this.codeEl) return;
 
@@ -76,6 +108,9 @@ export class CodeFrame {
    * Actions
    * --------------------------- */
 
+  /*
+   * Handles the format selection change (HTML or React)
+   */
   private onFormatChange(e: Event) {
     const value = (e.target as HTMLSelectElement).value;
     this.activeFormat = value === 'react' ? 'react' : 'html';
@@ -83,6 +118,9 @@ export class CodeFrame {
     this.updateDisplayedCode();
   }
 
+  /*
+   * Copies the current code to clipboard
+   */
   private copyCode() {
     const code = this.activeFormat === 'html' ? this.codeEl?.textContent : this.codeEl?.textContent;
 
@@ -97,9 +135,14 @@ export class CodeFrame {
     }, 3000);
   }
 
+  /* ---------------------------
+   * Render
+   * --------------------------- */
+
   render() {
     return (
       <div class="code-frame">
+        {/* Code actions bar: Format selection and toggle visibility */}
         <div class="code-actions-bar">
           <gcds-select select-id="code-format" label="Select environment" hide-label name="select" onChange={e => this.onFormatChange(e)}>
             <option value="html">HTML</option>
@@ -110,10 +153,12 @@ export class CodeFrame {
           </gcds-button>
         </div>
 
+        {/* Component preview area */}
         <div class="component-preview">
           <slot></slot>
         </div>
 
+        {/* Code preview area: Displays the formatted code */}
         <div class={`code-preview${!this.showCode ? ' hidden' : ''}`}>
           <pre class="language-html">
             <code ref={el => (this.codeEl = el as HTMLElement)}></code>
