@@ -155,6 +155,7 @@ export class ComponentDisplay {
         {/* Tabs */}
         {this.attributeObject || this.slotObject || this.eventObject || this.accessibility ? (
           <div id="tabs">
+            <gcds-heading tag="h4">Component API</gcds-heading>
             <div role="tablist">
               {this.attributeObject && (
                 <gcds-button
@@ -164,7 +165,7 @@ export class ComponentDisplay {
                   onClick={() => this.setDisplay('attrs')}
                   aria-selected={this.display === 'attrs' ? 'true' : 'false'}
                 >
-                  Attributes & properties
+                  Attributes
                 </gcds-button>
               )}
               {this.slotObject && (

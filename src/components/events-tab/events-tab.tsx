@@ -20,12 +20,9 @@ export class EventsTab {
 
   render() {
     return (
-      <Host
-        role="tabpanel"
-        tabindex="0"
-      >
+      <Host role="tabpanel" tabindex="0">
         <table class="events">
-          <caption>Custom events the component has</caption>
+          <caption>Review the custom events the component emits and understand when they are trigger and what data they provide.</caption>
           <tr>
             <th>Event name</th>
             <th>Description</th>
