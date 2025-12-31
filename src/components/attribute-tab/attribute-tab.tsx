@@ -1,6 +1,6 @@
 import { Component, Host, h, Element, Prop, Event, EventEmitter, State } from '@stencil/core';
 
-import { AttributesType, assignLanguage } from '../../utils/utils';
+import { AttributesType, assignLanguage, closestElement } from '../../utils/utils';
 
 @Component({
   tag: 'attribute-tab',
@@ -47,7 +47,12 @@ export class AttributeTab {
             this.attributeObject.map(attr => {
               let control = '';
 
-              const displayValue = this.displayElement.getAttribute(attr.name) != null ? this.displayElement.getAttribute(attr.name) : attr?.defaultValue;
+              let displayValue = this.displayElement.getAttribute(attr.name) != null ? this.displayElement.getAttribute(attr.name) : attr?.defaultValue;
+
+              // Special case for lang attribute to inherit from closest parent with lang attribute
+              if (attr.name === 'lang') {
+                displayValue = closestElement('[lang]', this.displayElement).getAttribute('lang') || displayValue;
+              }
 
               if (attr.control === 'select') {
                 const options = typeof attr.options === 'string' ? JSON.parse(attr.options) : attr.options;
