@@ -14,7 +14,7 @@ Show the rendered component and the HTML used to render the component
 
 - [X] Cleaner display
 - [ ] Ability to show code examples for each supported framework (there are small differences in the way they handle attributes) and copy them directly
-- [ ] How to handle landmark components (like `gcds-header`). If more than one on a page we will get flagged for accessibility everytime even though it is clearly an example.
+- [X] How to handle landmark components (like `gcds-header`). If more than one on a page we will get flagged for accessibility everytime even though it is clearly an example.
 
 ### Properties/attributes table
 
