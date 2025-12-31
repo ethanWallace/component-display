@@ -12,7 +12,7 @@ Show the rendered component and the HTML used to render the component
 
 #### Code preview todo
 
-- [ ] Cleaner display
+- [X] Cleaner display
 - [ ] Ability to show code examples for each supported framework (there are small differences in the way they handle attributes) and copy them directly
 - [ ] How to handle landmark components (like `gcds-header`). If more than one on a page we will get flagged for accessibility everytime even though it is clearly an example.
 
@@ -59,7 +59,7 @@ A tab that gives the option to run axe-core accessibility test right on the live
 
 These are items to do that don't directly tie into one single feature.
 
-- [ ] General style cleanup. Make it look pretty.
+- [X] General style cleanup. Make it look pretty.
 - [ ] Tab accessibility
 - [ ] How to handle smaller layouts
 - [ ] (**stretch**) Figure out if we can make it render the properties, slot and events tables using the components manifest (`component.json`) to save time writing out each `component-display` manually.
