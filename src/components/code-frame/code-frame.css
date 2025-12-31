@@ -36,6 +36,12 @@
     .component-preview {
       padding: var(--gcds-spacing-350) var(--gcds-spacing-250);
       border-block-start: 0;
+
+      iframe {
+        width: 100%;
+        height: 300px;
+        border: none;
+      }
     }
 
     .code-preview {

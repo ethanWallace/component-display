@@ -130,10 +130,9 @@
 
       <gcds-heading tag="h2">Header</gcds-heading>
 
-      <component-display id="header-display" class="mb-400" accessibility>
+      <component-display id="header-display" class="mb-400" accessibility landmark-display>
         <gcds-header>
           <gcds-search slot="search"></gcds-search>
-          <gcds-topic-menu slot="menu"></gcds-topic-menu>
           <gcds-breadcrumbs slot="breadcrumb">
             <gcds-breadcrumbs-item href="#">Design System</gcds-breadcrumbs-item>
             <gcds-breadcrumbs-item href="#">Components</gcds-breadcrumbs-item>
@@ -208,6 +207,23 @@
         headerDisplay.attrs = headerAttrs;
         headerDisplay.slots = headerSlots;
       </script>
+
+      <component-display id="header-display" class="mb-400" accessibility landmark-display>
+        <gcds-top-nav label="Top navigation" alignment="right">
+          <gcds-nav-link href="#home" slot="home">GC Notify</gcds-nav-link>
+          <gcds-nav-link href="#">Why GC Notify</gcds-nav-link>
+          <gcds-nav-link href="#">Why GC Notify</gcds-nav-link>
+
+          <gcds-nav-group open-trigger="Features" menu-label="Features">
+            <gcds-nav-link href="#" current>Create reusable templates</gcds-nav-link>
+            <gcds-nav-link href="#">Personalize messages</gcds-nav-link>
+            <gcds-nav-link href="#">Schedule messages</gcds-nav-link>
+            <gcds-nav-link href="#">Send messages automatically</gcds-nav-link>
+          </gcds-nav-group>
+
+          <gcds-nav-link href="#">Contact us</gcds-nav-link>
+        </gcds-top-nav>
+      </component-display>
     </gcds-container>
   </body>
 </html>

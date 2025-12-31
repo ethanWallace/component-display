@@ -74,6 +74,11 @@ export class ComponentDisplay {
    */
   @Prop() accessibility?: boolean = false;
 
+  /*
+   * Display landmark elements in iframe
+   */
+  @Prop() landmarkDisplay?: boolean = false;
+
   /* ---------------------------
    * State
    * --------------------------- */
@@ -148,7 +153,12 @@ export class ComponentDisplay {
     return (
       <Host>
         {/* Component + code preview */}
-        <code-frame source={this.codeSource}>
+        <code-frame
+          source={this.codeSource}
+          landmarkDisplay={this.landmarkDisplay}
+          accessibility={this.accessibility}
+          lang={this.lang}
+        >
           <slot></slot>
         </code-frame>
 
@@ -196,8 +206,14 @@ export class ComponentDisplay {
             {this.eventObject && <events-tab eventObject={this.eventObject} class={this.display != 'events' && 'hidden'}></events-tab>}
 
             {this.accessibility && (
-              <accessibility-tab displayElement={this.displayElement} class={`tabs--accessibility${this.display != 'a11y' ? ' hidden' : ''}`} lang={this.lang}></accessibility-tab>
-            )}
+              <accessibility-tab
+                displayElement={this.displayElement}
+                class={`tabs--accessibility${this.display != 'a11y' ? ' hidden' : ''}`}
+                landmarkDisplay={this.landmarkDisplay}
+                lang={this.lang}
+              ></accessibility-tab>
+            )
+            }
           </div>
         ) : null}
       </Host>

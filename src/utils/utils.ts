@@ -51,3 +51,36 @@ export type EventType = {
   description: string;
   details: string | object;
 };
+
+export const srcDoc = `<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Landmark Elements</title>
+  <link rel="stylesheet" href="./gcds/gcds.css" />
+  <script type="module" src="./gcds/gcds.esm.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdn.design-system.alpha.canada.ca/@gcds-core/css-shortcuts@latest/dist/gcds-css-shortcuts.min.css"
+  />
+  {{axeScript}}
+</head>
+<body>
+  {{displayElement}}
+</body>
+</html>`;
+
+export const formatSrcDoc = (displayElement: string, accessibility: boolean = false, lang: string = 'en') => {
+  let doc = srcDoc;
+  if (accessibility) {
+    const axeScript = `<script src="https://cdn.jsdelivr.net/npm/axe-core@4.7.2/axe.min.js"></script>`;
+    doc = doc.replace('{{axeScript}}', axeScript);
+  } else {
+    doc = doc.replace('{{axeScript}}', '');
+  }
+  doc = doc.replace('{{lang}}', lang);
+  doc = doc.replace('{{displayElement}}', displayElement);
+
+  return doc;
+};

@@ -7,12 +7,13 @@
 
 ## Properties
 
-| Property        | Attribute       | Description | Type                         | Default     |
-| --------------- | --------------- | ----------- | ---------------------------- | ----------- |
-| `accessibility` | `accessibility` |             | `boolean`                    | `false`     |
-| `attrs`         | `attrs`         |             | `AttributesType[] \| string` | `undefined` |
-| `events`        | `events`        |             | `EventType[] \| string`      | `undefined` |
-| `slots`         | `slots`         |             | `SlotType[] \| string`       | `undefined` |
+| Property          | Attribute          | Description | Type                         | Default     |
+| ----------------- | ------------------ | ----------- | ---------------------------- | ----------- |
+| `accessibility`   | `accessibility`    |             | `boolean`                    | `false`     |
+| `attrs`           | `attrs`            |             | `AttributesType[] \| string` | `undefined` |
+| `events`          | `events`           |             | `EventType[] \| string`      | `undefined` |
+| `landmarkDisplay` | `landmark-display` |             | `boolean`                    | `false`     |
+| `slots`           | `slots`            |             | `SlotType[] \| string`       | `undefined` |
 
 
 ## Dependencies

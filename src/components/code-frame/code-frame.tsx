@@ -1,8 +1,10 @@
-import { Component, h, Prop, State, Watch } from '@stencil/core';
+import { Component, h, Prop, State, Watch, Element } from '@stencil/core';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
 import prettier from 'prettier/standalone';
 import prettierPluginHTML from 'prettier/plugins/html';
+
+import { formatSrcDoc, assignLanguage } from '../../utils/utils';
 
 @Component({
   tag: 'code-frame',
@@ -10,6 +12,9 @@ import prettierPluginHTML from 'prettier/plugins/html';
   shadow: true,
 })
 export class CodeFrame {
+  @Element() el: HTMLElement;
+  private landmarkIframe?: HTMLIFrameElement;
+
   /* ---------------------------
    * Props
    * --------------------------- */
@@ -18,6 +23,16 @@ export class CodeFrame {
    * Source HTML code to be formatted and highlighted
    */
   @Prop() source: string;
+
+  /*
+   * Display landmark elements in iframe
+   */
+  @Prop() landmarkDisplay?: boolean = false;
+
+  /*
+   * Enable accessibility tests using axe-core in iframe
+   */
+  @Prop() accessibility?: boolean = false;
 
   /* ---------------------------
    * State
@@ -28,6 +43,7 @@ export class CodeFrame {
   @State() htmlCode = '';
   @State() reactCode = '';
   @State() copyLabel = 'Copy code';
+  @State() lang = 'en';
 
   private codeEl?: HTMLElement;
 
@@ -38,14 +54,36 @@ export class CodeFrame {
   @Watch('source')
   async onSourceChange() {
     await this.formatCodePreview();
+
+    if (this.landmarkDisplay && this.landmarkIframe) {
+      this.landmarkIframe.srcdoc = formatSrcDoc(
+        this.source,
+        this.accessibility,
+        this.lang
+      );
+    }
   }
 
   /* ---------------------------
    * Lifecycle
    * --------------------------- */
 
+  async componentWillLoad() {
+    // Define lang attribute
+    this.lang = assignLanguage(this.el);
+
+  }
+
   componentDidLoad() {
     this.formatCodePreview();
+
+    if (this.landmarkDisplay && this.landmarkIframe) {
+      this.landmarkIframe.srcdoc = formatSrcDoc(
+        this.source,
+        this.accessibility,
+        this.lang
+      );
+    }
   }
 
   /* ---------------------------
@@ -155,7 +193,14 @@ export class CodeFrame {
 
         {/* Component preview area */}
         <div class="component-preview">
-          <slot></slot>
+          {this.landmarkDisplay ?
+            <iframe
+              title="Landmark elements display"
+              ref={element => (this.landmarkIframe = element as HTMLIFrameElement)}
+            ></iframe>
+            :
+            <slot></slot>
+          }
         </div>
 
         {/* Code preview area: Displays the formatted code */}
