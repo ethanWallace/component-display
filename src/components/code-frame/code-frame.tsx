@@ -3,8 +3,8 @@ import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
 import prettier from 'prettier/standalone';
 import prettierPluginHTML from 'prettier/plugins/html';
-
 import { formatSrcDoc, assignLanguage } from '../../utils/utils';
+import i18n from './i18n/i18n';
 
 @Component({
   tag: 'code-frame',
@@ -56,11 +56,7 @@ export class CodeFrame {
     await this.formatCodePreview();
 
     if (this.landmarkDisplay && this.landmarkIframe) {
-      this.landmarkIframe.srcdoc = formatSrcDoc(
-        this.source,
-        this.accessibility,
-        this.lang
-      );
+      this.landmarkIframe.srcdoc = formatSrcDoc(this.source, this.accessibility, this.lang);
     }
   }
 
@@ -71,18 +67,13 @@ export class CodeFrame {
   async componentWillLoad() {
     // Define lang attribute
     this.lang = assignLanguage(this.el);
-
   }
 
   componentDidLoad() {
     this.formatCodePreview();
 
     if (this.landmarkDisplay && this.landmarkIframe) {
-      this.landmarkIframe.srcdoc = formatSrcDoc(
-        this.source,
-        this.accessibility,
-        this.lang
-      );
+      this.landmarkIframe.srcdoc = formatSrcDoc(this.source, this.accessibility, this.lang);
     }
   }
 
@@ -166,10 +157,10 @@ export class CodeFrame {
 
     navigator.clipboard.writeText(code);
 
-    this.copyLabel = 'Code copied';
+    this.copyLabel = i18n[this.lang].copiedLabel;
 
     setTimeout(() => {
-      this.copyLabel = 'Copy code';
+      this.copyLabel = i18n[this.lang].copyLabel;
     }, 3000);
   }
 
@@ -178,6 +169,8 @@ export class CodeFrame {
    * --------------------------- */
 
   render() {
+    const { lang } = this;
+
     return (
       <div class="code-frame">
         {/* Code actions bar: Format selection and toggle visibility */}
@@ -187,20 +180,13 @@ export class CodeFrame {
             <option value="react">React</option>
           </gcds-select>
           <gcds-button button-role="secondary" onClick={() => (this.showCode = !this.showCode)}>
-            {this.showCode ? 'Hide code' : 'Show code'}
+            {this.showCode ? i18n[lang].hideLabel : i18n[lang].showLabel}
           </gcds-button>
         </div>
 
         {/* Component preview area */}
         <div class="component-preview">
-          {this.landmarkDisplay ?
-            <iframe
-              title="Landmark elements display"
-              ref={element => (this.landmarkIframe = element as HTMLIFrameElement)}
-            ></iframe>
-            :
-            <slot></slot>
-          }
+          {this.landmarkDisplay ? <iframe title="Landmark elements display" ref={element => (this.landmarkIframe = element as HTMLIFrameElement)} /> : <slot></slot>}
         </div>
 
         {/* Code preview area: Displays the formatted code */}

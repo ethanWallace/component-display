@@ -1,6 +1,7 @@
 import { Component, Host, h, Prop, Watch, Element, State, Listen } from '@stencil/core';
 
 import { assignLanguage, removeUnwantedAttributes, AttributesType, SlotType, EventType } from '../../utils/utils';
+import i18n from './i18n/i18n';
 
 @Component({
   tag: 'component-display',
@@ -150,22 +151,19 @@ export class ComponentDisplay {
    * --------------------------- */
 
   render() {
+    const { lang } = this;
+
     return (
       <Host>
         {/* Component + code preview */}
-        <code-frame
-          source={this.codeSource}
-          landmarkDisplay={this.landmarkDisplay}
-          accessibility={this.accessibility}
-          lang={this.lang}
-        >
+        <code-frame source={this.codeSource} landmarkDisplay={this.landmarkDisplay} accessibility={this.accessibility} lang={this.lang}>
           <slot></slot>
         </code-frame>
 
         {/* Tabs */}
         {this.attributeObject || this.slotObject || this.eventObject || this.accessibility ? (
           <div id="tabs">
-            <gcds-heading tag="h4">Component API</gcds-heading>
+            <gcds-heading tag="h4">{i18n[lang].tabsHeading}</gcds-heading>
             <div role="tablist">
               {this.attributeObject && (
                 <gcds-button
@@ -175,22 +173,22 @@ export class ComponentDisplay {
                   onClick={() => this.setDisplay('attrs')}
                   aria-selected={this.display === 'attrs' ? 'true' : 'false'}
                 >
-                  Attributes
+                  {i18n[lang].tabsAttributes}
                 </gcds-button>
               )}
               {this.slotObject && (
                 <gcds-button id="slots" button-role="secondary" role="tab" onClick={() => this.setDisplay('slots')} aria-selected={this.display === 'slots' ? 'true' : 'false'}>
-                  Slots
+                  {i18n[lang].tabsSlots}
                 </gcds-button>
               )}
               {this.eventObject && (
                 <gcds-button id="events" button-role="secondary" role="tab" onClick={() => this.setDisplay('events')} aria-selected={this.display === 'events' ? 'true' : 'false'}>
-                  Events
+                  {i18n[lang].tabsEvents}
                 </gcds-button>
               )}
               {this.accessibility && (
                 <gcds-button id="a11y" button-role="secondary" role="tab" onClick={() => this.setDisplay('a11y')} aria-selected={this.display === 'a11y' ? 'true' : 'false'}>
-                  Accessibility
+                  {i18n[lang].tabsA11y}
                 </gcds-button>
               )}
             </div>
@@ -212,8 +210,7 @@ export class ComponentDisplay {
                 landmarkDisplay={this.landmarkDisplay}
                 lang={this.lang}
               ></accessibility-tab>
-            )
-            }
+            )}
           </div>
         ) : null}
       </Host>

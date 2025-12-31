@@ -3,6 +3,7 @@ import axe from 'axe-core';
 import axeLocaleFr from 'axe-core/locales/fr.json';
 
 import { assignLanguage, closestElement } from '../../utils/utils';
+import i18n from './i18n/i18n';
 
 @Component({
   tag: 'accessibility-tab',
@@ -12,12 +13,23 @@ import { assignLanguage, closestElement } from '../../utils/utils';
 export class AccessibilityTab {
   @Element() el: HTMLElement;
 
+  /* ---------------------------
+   * Props
+   * --------------------------- */
   @Prop() displayElement!: Element;
   @Prop() landmarkDisplay?: boolean;
+
+  /* ---------------------------
+   * State
+   * --------------------------- */
 
   @State() axeResults: axe.AxeResults | null = null;
   @State() testRunning: boolean = false;
   @State() lang: string = 'en';
+
+  /* ---------------------------
+   * Actions
+   * --------------------------- */
 
   private async runA11yTest() {
     if (this.testRunning) {
@@ -28,10 +40,9 @@ export class AccessibilityTab {
     this.testRunning = true;
 
     try {
-      const container = this.landmarkDisplay ?
-        closestElement('component-display', this.el).shadowRoot.querySelector('code-frame').shadowRoot.querySelector('iframe').contentWindow.document.body
-        :
-        this.el.querySelector('#test-container');
+      const container = this.landmarkDisplay
+        ? closestElement('component-display', this.el).shadowRoot.querySelector('code-frame').shadowRoot.querySelector('iframe').contentWindow.document.body
+        : this.el.querySelector('#test-container');
 
       if (!this.landmarkDisplay) {
         container.innerHTML = this.displayElement.outerHTML;
@@ -40,7 +51,10 @@ export class AccessibilityTab {
       setTimeout(async () => {
         if (this.lang === 'fr') {
           if (this.landmarkDisplay) {
-            closestElement('component-display', this.el).shadowRoot.querySelector('code-frame').shadowRoot.querySelector('iframe').contentWindow!.axe.configure({ locale: axeLocaleFr });
+            closestElement('component-display', this.el)
+              .shadowRoot.querySelector('code-frame')
+              .shadowRoot.querySelector('iframe')
+              .contentWindow!.axe.configure({ locale: axeLocaleFr });
           } else {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
@@ -50,7 +64,10 @@ export class AccessibilityTab {
 
         // Test on component inside iframe
         if (this.landmarkDisplay) {
-          this.axeResults = await closestElement('component-display', this.el).shadowRoot.querySelector('code-frame').shadowRoot.querySelector('iframe').contentWindow!.axe.run(container);
+          this.axeResults = await closestElement('component-display', this.el)
+            .shadowRoot.querySelector('code-frame')
+            .shadowRoot.querySelector('iframe')
+            .contentWindow!.axe.run(container);
         } else {
           this.axeResults = await axe.run(container);
         }
@@ -68,6 +85,10 @@ export class AccessibilityTab {
       }, 2000);
     }
   }
+
+  /* ---------------------------
+   * Helpers
+   * --------------------------- */
 
   renderAxeResultsTable() {
     if (this.axeResults && this.axeResults.violations.length > 0) {
@@ -131,16 +152,24 @@ export class AccessibilityTab {
     return null;
   }
 
+  /* ---------------------------
+   * Lifecycle
+   * --------------------------- */
+
   async componentWillLoad() {
+    // Define lang attribute
     this.lang = assignLanguage(this.el);
   }
 
+  /* ---------------------------
+   * Render
+   * --------------------------- */
+
   render() {
+    const { lang } = this;
+
     return (
-      <Host
-        role="tabpanel"
-        tabindex="0"
-      >
+      <Host role="tabpanel" tabindex="0">
         <gcds-button
           button-role="secondary"
           disabled={this.testRunning}
@@ -148,17 +177,11 @@ export class AccessibilityTab {
             await this.runA11yTest();
           }}
         >
-          {this.testRunning ?
-            <span>Running accessibility test</span>
-            :
-            <span>Run accessibility test</span>
-          }
+          {this.testRunning ? <span>{i18n[lang].runningTest}</span> : <span>{i18n[lang].runTest}</span>}
         </gcds-button>
 
         <p aria-live="polite">
-          {this.axeResults && this.axeResults.violations.length > 0
-            ? `${this.axeResults.violations.length} issue(s) found. Please reference table below for more details.`
-            : this.axeResults && `No issues found. Please reference table below to see passed tests.`}
+          {this.axeResults && this.axeResults.violations.length > 0 ? `${this.axeResults.violations.length} ${i18n[lang].issues}` : this.axeResults && i18n[lang].noIssues}
         </p>
 
         <div id="test-container"></div>
