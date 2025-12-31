@@ -29,7 +29,7 @@ export class AccessibilityTab {
 
     try {
       const container = this.landmarkDisplay ?
-        closestElement('component-display', this.el).shadowRoot.querySelector('iframe').contentWindow.document.body
+        closestElement('component-display', this.el).shadowRoot.querySelector('code-frame').shadowRoot.querySelector('iframe').contentWindow.document.body
         :
         this.el.querySelector('#test-container');
 
@@ -40,7 +40,7 @@ export class AccessibilityTab {
       setTimeout(async () => {
         if (this.lang === 'fr') {
           if (this.landmarkDisplay) {
-            closestElement('component-display', this.el).shadowRoot.querySelector('iframe').contentWindow!.axe.configure({ locale: axeLocaleFr });
+            closestElement('component-display', this.el).shadowRoot.querySelector('code-frame').shadowRoot.querySelector('iframe').contentWindow!.axe.configure({ locale: axeLocaleFr });
           } else {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
@@ -50,7 +50,7 @@ export class AccessibilityTab {
 
         // Test on component inside iframe
         if (this.landmarkDisplay) {
-          this.axeResults = await closestElement('component-display', this.el).shadowRoot.querySelector('iframe').contentWindow!.axe.run(container);
+          this.axeResults = await closestElement('component-display', this.el).shadowRoot.querySelector('code-frame').shadowRoot.querySelector('iframe').contentWindow!.axe.run(container);
         } else {
           this.axeResults = await axe.run(container);
         }

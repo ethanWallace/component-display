@@ -21,8 +21,8 @@ export class SlotsTab {
   @State() slotErrors: { [k: string]: string } = {};
 
   /*
-  * Sanitize and emit slot change event
-  */
+   * Sanitize and emit slot change event
+   */
   private emitSlotEvent(e) {
     const sanitizedValue = DOMPurify.sanitize(e.target.value, {
       CUSTOM_ELEMENT_HANDLING: {
@@ -55,7 +55,7 @@ export class SlotsTab {
     const eventDetail = {
       name,
       value: sanitizedValue,
-    }
+    };
 
     this.slotValueChange.emit(eventDetail);
   }
@@ -66,10 +66,7 @@ export class SlotsTab {
 
   render() {
     return (
-      <Host
-        role="tabpanel"
-        tabindex="0"
-      >
+      <Host role="tabpanel" tabindex="0">
         <table class="slots">
           <caption>Slots allow passing text or HTML elements to the component. Modify the HTML values to update the displayed component.</caption>
           <tr>
@@ -88,7 +85,7 @@ export class SlotsTab {
                 value={this.slotHistory[slot.name]}
                 error-message={this.slotErrors[slot.name]}
                 validate-on="other"
-                onChange={e => this.emitSlotEvent(e)}
+                onInput={e => this.emitSlotEvent(e)}
                 lang={this.lang}
               ></gcds-textarea>
             );

@@ -18,6 +18,17 @@ export namespace Components {
         "attributeObject": Array<AttributesType>;
         "displayElement": Element;
     }
+    interface CodeFrame {
+        /**
+          * @default false
+         */
+        "accessibility"?: boolean;
+        /**
+          * @default false
+         */
+        "landmarkDisplay"?: boolean;
+        "source": string;
+    }
     interface ComponentDisplay {
         /**
           * @default false
@@ -72,6 +83,12 @@ declare global {
         prototype: HTMLAttributeTabElement;
         new (): HTMLAttributeTabElement;
     };
+    interface HTMLCodeFrameElement extends Components.CodeFrame, HTMLStencilElement {
+    }
+    var HTMLCodeFrameElement: {
+        prototype: HTMLCodeFrameElement;
+        new (): HTMLCodeFrameElement;
+    };
     interface HTMLComponentDisplayElement extends Components.ComponentDisplay, HTMLStencilElement {
     }
     var HTMLComponentDisplayElement: {
@@ -104,6 +121,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "accessibility-tab": HTMLAccessibilityTabElement;
         "attribute-tab": HTMLAttributeTabElement;
+        "code-frame": HTMLCodeFrameElement;
         "component-display": HTMLComponentDisplayElement;
         "events-tab": HTMLEventsTabElement;
         "slots-tab": HTMLSlotsTabElement;
@@ -118,6 +136,17 @@ declare namespace LocalJSX {
         "attributeObject"?: Array<AttributesType>;
         "displayElement": Element;
         "onAttributeChange"?: (event: AttributeTabCustomEvent<Object>) => void;
+    }
+    interface CodeFrame {
+        /**
+          * @default false
+         */
+        "accessibility"?: boolean;
+        /**
+          * @default false
+         */
+        "landmarkDisplay"?: boolean;
+        "source"?: string;
     }
     interface ComponentDisplay {
         /**
@@ -144,6 +173,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "accessibility-tab": AccessibilityTab;
         "attribute-tab": AttributeTab;
+        "code-frame": CodeFrame;
         "component-display": ComponentDisplay;
         "events-tab": EventsTab;
         "slots-tab": SlotsTab;
@@ -155,6 +185,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "accessibility-tab": LocalJSX.AccessibilityTab & JSXBase.HTMLAttributes<HTMLAccessibilityTabElement>;
             "attribute-tab": LocalJSX.AttributeTab & JSXBase.HTMLAttributes<HTMLAttributeTabElement>;
+            "code-frame": LocalJSX.CodeFrame & JSXBase.HTMLAttributes<HTMLCodeFrameElement>;
             "component-display": LocalJSX.ComponentDisplay & JSXBase.HTMLAttributes<HTMLComponentDisplayElement>;
             "events-tab": LocalJSX.EventsTab & JSXBase.HTMLAttributes<HTMLEventsTabElement>;
             "slots-tab": LocalJSX.SlotsTab & JSXBase.HTMLAttributes<HTMLSlotsTabElement>;

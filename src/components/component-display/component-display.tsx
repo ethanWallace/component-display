@@ -1,31 +1,24 @@
 import { Component, Host, h, Prop, Watch, Element, State, Listen } from '@stencil/core';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-jsx';
-import prettier from 'prettier/standalone';
-import prettierPluginHTML from 'prettier/plugins/html';
 
-import { assignLanguage, removeUnwantedAttributes, AttributesType, SlotType, EventType, formatSrcDoc } from '../../utils/utils';
+import { assignLanguage, removeUnwantedAttributes, AttributesType, SlotType, EventType } from '../../utils/utils';
 
 @Component({
   tag: 'component-display',
-  styleUrls: ['prism.css', 'component-display.css'],
+  styleUrls: ['component-display.css'],
   shadow: true,
 })
 export class ComponentDisplay {
   @Element() el: HTMLElement;
 
   private displayElement?: Element;
-  private landmarkIframe?: HTMLIFrameElement;
-  private htmlCodePreview?: HTMLElement;
-  private reactCodePreview?: HTMLElement;
-  private copyHTMLButton?: HTMLElement;
-  private copyReactButton?: HTMLElement;
-
   private slotHistory: object = [];
-
   private attributeObject;
   private slotObject;
   private eventObject;
+
+  /* ---------------------------
+   * Props + validation
+   * --------------------------- */
 
   /*
    * Array to format attributes table
@@ -56,10 +49,9 @@ export class ComponentDisplay {
       if (slot.name === 'default') {
         this.slotHistory[slot.name] = this.displayElement.innerHTML;
       } else {
-        this.slotHistory[slot.name] = this.displayElement.querySelector(`[slot="${slot.name}"]`) ?
-          removeUnwantedAttributes(this.displayElement.querySelector(`[slot="${slot.name}"]`)?.outerHTML)
-          :
-          '';
+        const el = this.displayElement.querySelector(`[slot="${slot.name}"]`) as HTMLElement;
+
+        this.slotHistory[slot.name] = el ? removeUnwantedAttributes(el.outerHTML) : '';
       }
     });
   }
@@ -87,27 +79,23 @@ export class ComponentDisplay {
    */
   @Prop() landmarkDisplay?: boolean = false;
 
-  @State() display: string = 'attrs';
-  @State() showCode: boolean = true;
-  @State() lang: string = 'en';
+  /* ---------------------------
+   * State
+   * --------------------------- */
 
-  private setDisplay(str) {
-    this.display = str;
-  }
+  @State() display: 'attrs' | 'slots' | 'events' | 'a11y' = 'attrs';
+  @State() lang = 'en';
+  @State() codeSource = '';
+
+  /* ---------------------------
+   * Listeners
+   * --------------------------- */
 
   @Listen('attributeChange', { target: 'document' })
   attributeChangeListener(e) {
     if (e.target === this.el) {
       this.displayElement.setAttribute(e.detail.name, e.detail.value);
-      this.formatCodePreview();
-
-      if (this.landmarkDisplay && this.landmarkIframe) {
-        this.landmarkIframe.srcdoc = formatSrcDoc(
-          this.displayElement.outerHTML,
-          this.accessibility,
-          this.lang
-        );
-      }
+      this.updateCodePreview();
     }
   }
 
@@ -115,82 +103,14 @@ export class ComponentDisplay {
   slotValueChangeListener(e) {
     if (e.target === this.el) {
       this.slotHistory[e.detail.name] = e.detail.value;
-
       this.renderSlotContent();
-      this.formatCodePreview();
-
-      if (this.landmarkDisplay && this.landmarkIframe) {
-        this.landmarkIframe.srcdoc = formatSrcDoc(
-          this.displayElement.outerHTML,
-          this.accessibility,
-          this.lang
-        );
-      }
+      this.updateCodePreview();
     }
   }
 
-  // Add slot content to the component display
-  private renderSlotContent() {
-    this.displayElement.innerHTML = '';
-
-    Object.keys(this.slotHistory).forEach(slotName => {
-      this.displayElement.innerHTML += `
-      ${this.slotHistory[slotName]}`;
-    });
-  }
-
-  // Code preview
-
-  private convertToReact(str) {
-    const react = str.replace(/"([^"]*)"|(\b[a-z]+(?:-[a-z]+)+\b)/g, (match, quoted, kebab) => {
-      if (quoted) return `"${quoted}"`;
-
-      if (kebab) {
-        return kebab.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
-      }
-
-      return match;
-    });
-
-    const code = react.replace(/<g/g, '<G').replace(/<\/g/g, '</G');
-    const componentName = code.match(/<\w+/);
-
-    const importStatement = `import { ${componentName[0].replace('<', '')} } from @cdssnc/gcds-components-react; \n\n`;
-
-    return importStatement + code;
-  }
-
-  private async formatCodePreview() {
-    const code = await prettier.format(
-      removeUnwantedAttributes(this.el.innerHTML),
-      {
-        parser: 'html',
-        plugins: [prettierPluginHTML],
-      }
-    );
-    const react = this.convertToReact(code);
-
-    this.htmlCodePreview.innerHTML = Prism.highlight(code, Prism.languages.html, 'html');
-    this.reactCodePreview.innerHTML = Prism.highlight(react, Prism.languages.jsx, 'html');
-  }
-
-  private copyCode(e) {
-    let code = '';
-    if (e.target.name === 'html') {
-      code = this.htmlCodePreview.textContent;
-      this.copyHTMLButton.textContent = 'Code copied';
-      setTimeout(() => {
-        this.copyHTMLButton.textContent = 'Copy HTML';
-      }, 3000);
-    } else {
-      code = this.reactCodePreview.textContent;
-      this.copyReactButton.textContent = 'Code copied';
-      setTimeout(() => {
-        this.copyReactButton.textContent = 'Copy React';
-      }, 3000);
-    }
-    navigator.clipboard.writeText(code);
-  }
+  /* ---------------------------
+   * Lifecycle
+   * --------------------------- */
 
   async componentWillLoad() {
     // Define lang attribute
@@ -200,89 +120,62 @@ export class ComponentDisplay {
     this.validateAttrs();
     this.validateSlots();
     this.validateEvents();
+
+    this.updateCodePreview();
   }
 
-  async componentDidLoad() {
-    if (this.landmarkDisplay && this.landmarkIframe) {
-      this.landmarkIframe.srcdoc = formatSrcDoc(
-        this.displayElement.outerHTML,
-        this.accessibility,
-        this.lang
-      );
-    }
+  /* ---------------------------
+   * Helpers
+   * --------------------------- */
 
-    this.formatCodePreview();
+  // Add slot content to the component display
+  private renderSlotContent() {
+    this.displayElement.innerHTML = '';
+
+    Object.values(this.slotHistory).forEach(content => {
+      this.displayElement.innerHTML += content;
+    });
   }
+
+  private updateCodePreview() {
+    this.codeSource = removeUnwantedAttributes(this.el.innerHTML);
+  }
+
+  private setDisplay(tab: typeof this.display) {
+    this.display = tab;
+  }
+
+  /* ---------------------------
+   * Render
+   * --------------------------- */
 
   render() {
     return (
       <Host>
-        <div
-          class="display-frame"
+        {/* Component + code preview */}
+        <code-frame
+          source={this.codeSource}
+          landmarkDisplay={this.landmarkDisplay}
+          accessibility={this.accessibility}
+          lang={this.lang}
         >
-          {this.landmarkDisplay ?
-            <iframe
-              class="landmark-iframe"
-              title="Landmark elements display"
-              ref={element => (this.landmarkIframe = element as HTMLIFrameElement)}
-            ></iframe>
-            :
-            <slot></slot>
-          }
-        </div>
+          <slot></slot>
+        </code-frame>
 
-        <div class="code-frame">
-          <div class="code-actions">
-            <gcds-button
-              button-role="secondary"
-              onClick={() => {
-                this.showCode = !this.showCode;
-              }}
-            >
-              {this.showCode ? 'Hide code' : 'Show code'}
-            </gcds-button>
-
-            {this.showCode && (
-              <>
-                <gcds-button
-                  button-role="secondary"
-                  name="html"
-                  onClick={e => {
-                    this.copyCode(e);
-                  }}
-                  ref={element => (this.copyHTMLButton = element as HTMLElement)}
-                >
-                  Copy HTML
-                </gcds-button>
-                <gcds-button
-                  button-role="secondary"
-                  name="react"
-                  onClick={e => {
-                    this.copyCode(e);
-                  }}
-                  ref={element => (this.copyReactButton = element as HTMLElement)}
-                >
-                  Copy React
-                </gcds-button>
-              </>
-            )}
-          </div>
-          <div class={`code-preview${!this.showCode && ' hidden'}`}>
-            <pre class="language-html">
-              <code id="html" ref={element => (this.htmlCodePreview = element as HTMLElement)}></code>
-            </pre>
-            <pre class="language-html">
-              <code id="react" ref={element => (this.reactCodePreview = element as HTMLElement)}></code>
-            </pre>
-          </div>
-        </div>
-
+        {/* Tabs */}
         {this.attributeObject || this.slotObject || this.eventObject || this.accessibility ? (
           <div id="tabs">
+            <gcds-heading tag="h4">Component API</gcds-heading>
             <div role="tablist">
               {this.attributeObject && (
-                <gcds-button id="attributes" button-role="secondary" role="tab" onClick={() => this.setDisplay('attrs')} aria-selected={this.display === 'attrs' ? 'true' : 'false'}>
-                  Attributes & properties
+                <gcds-button
+                  id="attributes"
+                  button-role="secondary"
+                  role="tab"
+                  onClick={() => this.setDisplay('attrs')}
+                  aria-selected={this.display === 'attrs' ? 'true' : 'false'}
+                >
+                  Attributes
                 </gcds-button>
               )}
               {this.slotObject && (
@@ -303,28 +196,14 @@ export class ComponentDisplay {
             </div>
 
             {this.attributeObject && (
-              <attribute-tab
-                displayElement={this.displayElement}
-                attributeObject={this.attributeObject}
-                class={this.display != 'attrs' && 'hidden'}
-              ></attribute-tab>
+              <attribute-tab displayElement={this.displayElement} attributeObject={this.attributeObject} class={this.display != 'attrs' && 'hidden'}></attribute-tab>
             )}
 
             {this.slotObject && (
-              <slots-tab
-                displayElement={this.displayElement}
-                slotObject={this.slotObject}
-                slotHistory={this.slotHistory}
-                class={this.display != 'slots' && 'hidden'}
-              ></slots-tab>
+              <slots-tab displayElement={this.displayElement} slotObject={this.slotObject} slotHistory={this.slotHistory} class={this.display != 'slots' && 'hidden'}></slots-tab>
             )}
 
-            {this.eventObject && (
-              <events-tab
-                eventObject={this.eventObject}
-                class={this.display != 'events' && 'hidden'}
-              ></events-tab>
-            )}
+            {this.eventObject && <events-tab eventObject={this.eventObject} class={this.display != 'events' && 'hidden'}></events-tab>}
 
             {this.accessibility && (
               <accessibility-tab
@@ -337,7 +216,7 @@ export class ComponentDisplay {
             }
           </div>
         ) : null}
-      </Host >
+      </Host>
     );
   }
 }
