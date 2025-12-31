@@ -22,7 +22,7 @@ export const config: Config = {
       copy: [
         {
           src: '../node_modules/@cdssnc/gcds-components/dist/gcds',
-          dest: 'gcds',
+          dest: 'components/dist',
         },
       ],
     },

@@ -58,8 +58,8 @@ export const srcDoc = `<!DOCTYPE html>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Landmark Elements</title>
-  <link rel="stylesheet" href="./gcds/gcds.css" />
-  <script type="module" src="./gcds/gcds.esm.js"></script>
+  <link rel="stylesheet" href="/components/dist/gcds.css" />
+  <script type="module" src="/components/dist/gcds.esm.js"></script>
   <link
     rel="stylesheet"
     href="https://cdn.design-system.alpha.canada.ca/@gcds-core/css-shortcuts@latest/dist/gcds-css-shortcuts.min.css"
