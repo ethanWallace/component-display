@@ -1,6 +1,7 @@
 import { Component, Host, h, Element, Prop, State } from '@stencil/core';
 
 import { EventType, assignLanguage } from '../../utils/utils';
+import i18n from './i18n/i18n';
 
 @Component({
   tag: 'events-tab',
@@ -10,23 +11,42 @@ import { EventType, assignLanguage } from '../../utils/utils';
 export class EventsTab {
   @Element() el: HTMLElement;
 
+  /* ---------------------------
+   * Props
+   * --------------------------- */
+
   @Prop() eventObject: Array<EventType>;
+
+  /* ---------------------------
+   * State
+   * --------------------------- */
 
   @State() lang: string = 'en';
 
+  /* ---------------------------
+   * Lifecycle
+   * --------------------------- */
+
   async componentWillLoad() {
+    // Define lang attribute
     this.lang = assignLanguage(this.el);
   }
 
+  /* ---------------------------
+   * Render
+   * --------------------------- */
+
   render() {
+    const { lang } = this;
+
     return (
       <Host role="tabpanel" tabindex="0">
         <table class="events">
-          <caption>Review the custom events the component emits and understand when they are trigger and what data they provide.</caption>
+          <caption>{i18n[lang].caption}</caption>
           <tr>
-            <th>Event name</th>
-            <th>Description</th>
-            <th>Details</th>
+            <th>{i18n[lang].name}</th>
+            <th>{i18n[lang].description}</th>
+            <th>{i18n[lang].details}</th>
           </tr>
 
           {this.eventObject.map(event => {

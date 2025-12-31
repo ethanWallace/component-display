@@ -2,6 +2,7 @@ import { Component, Host, h, Element, Prop, Event, EventEmitter, State } from '@
 import DOMPurify from 'dompurify';
 
 import { assignLanguage, SlotType } from '../../utils/utils';
+import i18n from './i18n/i18n';
 
 @Component({
   tag: 'slots-tab',
@@ -11,14 +12,30 @@ import { assignLanguage, SlotType } from '../../utils/utils';
 export class SlotsTab {
   @Element() el: HTMLElement;
 
+  /* ---------------------------
+   * Props
+   * --------------------------- */
+
   @Prop() slotObject: Array<SlotType>;
   @Prop() displayElement!: Element;
   @Prop() slotHistory: Object;
 
+  /* ---------------------------
+   * Events
+   * --------------------------- */
+
   @Event() slotValueChange!: EventEmitter<Object>;
+
+  /* ---------------------------
+   * State
+   * --------------------------- */
 
   @State() lang: string = 'en';
   @State() slotErrors: { [k: string]: string } = {};
+
+  /* ---------------------------
+   * Actions
+   * --------------------------- */
 
   /*
    * Sanitize and emit slot change event
@@ -40,11 +57,12 @@ export class SlotsTab {
     if (textarea.value.trim() !== '') {
       // Check if the slot content includes the correct slot attribute
       if (name !== 'default' && !textarea.value.includes(`slot="${name}"`)) {
-        this.slotErrors = { ...this.slotErrors, [name]: `Content for the "${name}" slot must include the attribute slot="${name}".` };
+        this.slotErrors = { ...this.slotErrors, [name]: i18n[this.lang].slotMissingAttribute.replaceAll('{name}', name) };
         return;
       }
       if (sanitizedValue !== textarea.value) {
-        this.slotErrors = { ...this.slotErrors, [name]: 'The slot content contains invalid or unsafe HTML and has been sanitized.' };
+        this.slotErrors = { ...this.slotErrors, [name]: i18n[this.lang].slotSanitized };
+
         return;
       }
     }
@@ -60,19 +78,30 @@ export class SlotsTab {
     this.slotValueChange.emit(eventDetail);
   }
 
+  /* ---------------------------
+   * Lifecycle
+   * --------------------------- */
+
   async componentWillLoad() {
+    // Define lang attribute
     this.lang = assignLanguage(this.el);
   }
 
+  /* ---------------------------
+   * Render
+   * --------------------------- */
+
   render() {
+    const { lang } = this;
+
     return (
       <Host role="tabpanel" tabindex="0">
         <table class="slots">
-          <caption>Slots allow passing text or HTML elements to the component. Modify the HTML values to update the displayed component.</caption>
+          <caption>{i18n[lang].caption}</caption>
           <tr>
-            <th>Slot name</th>
-            <th>Description</th>
-            <th>Control</th>
+            <th>{i18n[lang].name}</th>
+            <th>{i18n[lang].description}</th>
+            <th>{i18n[lang].control}</th>
           </tr>
 
           {this.slotObject.map(slot => {

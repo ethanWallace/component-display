@@ -1,6 +1,7 @@
 import { Component, Host, h, Element, Prop, Event, EventEmitter, State } from '@stencil/core';
 
 import { AttributesType, assignLanguage, closestElement } from '../../utils/utils';
+import i18n from './i18n/i18n';
 
 @Component({
   tag: 'attribute-tab',
@@ -10,38 +11,62 @@ import { AttributesType, assignLanguage, closestElement } from '../../utils/util
 export class AttributeTab {
   @Element() el: HTMLElement;
 
+  /* ---------------------------
+   * Props
+   * --------------------------- */
+
   @Prop() attributeObject: Array<AttributesType>;
   @Prop() displayElement!: Element;
 
+  /* ---------------------------
+   * Events
+   * --------------------------- */
+
   @Event() attributeChange!: EventEmitter<Object>;
 
+  /* ---------------------------
+   * State
+   * --------------------------- */
+
   @State() lang: string = 'en';
+
+  /* ---------------------------
+   * Helpers
+   * --------------------------- */
 
   private formatEventDetail(e) {
     const eventDetail = {
       name: e.target.name,
       value: e.target.value,
-    }
+    };
 
     this.attributeChange.emit(eventDetail);
   }
 
+  /* ---------------------------
+   * Lifecycle
+   * --------------------------- */
+
   async componentWillLoad() {
+    // Define lang attribute
     this.lang = assignLanguage(this.el);
   }
 
+  /* ---------------------------
+   * Render
+   * --------------------------- */
+
   render() {
+    const { lang } = this;
+
     return (
-      <Host
-        role="tabpanel"
-        tabindex="0"
-      >
+      <Host role="tabpanel" tabindex="0">
         <table class="attributes">
           <tr>
-            <th>Attributes</th>
-            <th>Type</th>
-            <th>Default value</th>
-            <th>Control</th>
+            <th>{i18n[lang].attributes}</th>
+            <th>{i18n[lang].type}</th>
+            <th>{i18n[lang].defaultValue}</th>
+            <th>{i18n[lang].control}</th>
           </tr>
           {this.attributeObject &&
             this.attributeObject.map(attr => {
@@ -58,19 +83,13 @@ export class AttributeTab {
                 const options = typeof attr.options === 'string' ? JSON.parse(attr.options) : attr.options;
 
                 control = (
-                  <gcds-select
-                    label={attr.name}
-                    selectId={attr.name}
-                    name={attr.name}
-                    value={displayValue}
-                    hide-label
-                    onInput={(e) => this.formatEventDetail(e)}
-                  >
-                    {typeof options === 'object' && options.map(option => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
+                  <gcds-select label={attr.name} selectId={attr.name} name={attr.name} value={displayValue} hide-label onInput={e => this.formatEventDetail(e)}>
+                    {typeof options === 'object' &&
+                      options.map(option => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
                   </gcds-select>
                 );
               } else if (attr.control === 'text') {
@@ -82,7 +101,7 @@ export class AttributeTab {
                     hide-label
                     type="text"
                     value={displayValue}
-                    onInput={(e) => this.formatEventDetail(e)}
+                    onInput={e => this.formatEventDetail(e)}
                   ></gcds-input>
                 );
               }
