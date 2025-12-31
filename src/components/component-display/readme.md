@@ -19,6 +19,7 @@
 
 ### Depends on
 
+- [code-frame](../code-frame)
 - [attribute-tab](../attribute-tab)
 - [slots-tab](../slots-tab)
 - [events-tab](../events-tab)
@@ -27,6 +28,7 @@
 ### Graph
 ```mermaid
 graph TD;
+  component-display --> code-frame
   component-display --> attribute-tab
   component-display --> slots-tab
   component-display --> events-tab
