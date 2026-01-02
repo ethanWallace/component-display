@@ -108,9 +108,21 @@ export class AttributeTab {
 
               return (
                 <tr>
-                  <td>{attr.name}</td>
-                  <td>{attr.type}</td>
-                  <td>{attr?.defaultValue}</td>
+                  <td>
+                    {attr.name}
+                    {attr.required && (
+                      <span
+                        class="required"
+                        title={i18n[lang].required}
+                      >
+                        <span aria-hidden="true">*</span>
+                        <gcds-sr-only tag="span">
+                          {i18n[lang].required}
+                        </gcds-sr-only>
+                      </span>
+                    )}</td>
+                  <td>{attr?.type ? attr.type : <gcds-sr-only tag="span">{i18n[lang].noType}</gcds-sr-only>}</td>
+                  <td>{attr?.defaultValue ? attr.defaultValue : <gcds-sr-only>{i18n[lang].noDefaultValue}</gcds-sr-only>}</td>
                   <td>{control}</td>
                 </tr>
               );

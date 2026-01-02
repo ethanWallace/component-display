@@ -96,10 +96,10 @@ export class AccessibilityTab {
         <table>
           <thead>
             <tr>
-              <th>Violation ID</th>
-              <th>Description</th>
-              <th>Affected Element(s)</th>
-              <th>Failure Summary</th>
+              <th>{i18n[this.lang].violationID}</th>
+              <th>{i18n[this.lang].description}</th>
+              <th>{i18n[this.lang].affected}</th>
+              <th>{i18n[this.lang].summary}</th>
             </tr>
           </thead>
           <tbody>
@@ -133,8 +133,8 @@ export class AccessibilityTab {
         <table>
           <thead>
             <tr>
-              <th>Test</th>
-              <th>Description</th>
+              <th>{i18n[this.lang].test}</th>
+              <th>{i18n[this.lang].description}</th>
             </tr>
           </thead>
           <tbody>
