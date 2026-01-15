@@ -67,6 +67,12 @@ export class CodeFrame {
     }
   }
 
+  @Watch('framework')
+  async onFrameworkChange() {
+    this.activeFormat = this.framework;
+    await this.updateDisplayedCode();
+  }
+
   /* ---------------------------
    * Lifecycle
    * --------------------------- */
