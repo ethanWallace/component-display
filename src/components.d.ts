@@ -24,6 +24,10 @@ export namespace Components {
          */
         "accessibility"?: boolean;
         /**
+          * @default 'html'
+         */
+        "framework"?: 'html' | 'react' | 'vue' | 'angular';
+        /**
           * @default false
          */
         "landmarkDisplay"?: boolean;
@@ -36,6 +40,10 @@ export namespace Components {
         "accessibility"?: boolean;
         "attrs"?: string | Array<AttributesType>;
         "events"?: string | Array<EventType>;
+        /**
+          * @default 'html'
+         */
+        "framework"?: 'html' | 'react' | 'vue' | 'angular';
         /**
           * @default false
          */
@@ -143,6 +151,10 @@ declare namespace LocalJSX {
          */
         "accessibility"?: boolean;
         /**
+          * @default 'html'
+         */
+        "framework"?: 'html' | 'react' | 'vue' | 'angular';
+        /**
           * @default false
          */
         "landmarkDisplay"?: boolean;
@@ -155,6 +167,10 @@ declare namespace LocalJSX {
         "accessibility"?: boolean;
         "attrs"?: string | Array<AttributesType>;
         "events"?: string | Array<EventType>;
+        /**
+          * @default 'html'
+         */
+        "framework"?: 'html' | 'react' | 'vue' | 'angular';
         /**
           * @default false
          */

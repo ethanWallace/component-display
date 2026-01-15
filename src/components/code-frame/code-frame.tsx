@@ -34,14 +34,21 @@ export class CodeFrame {
    */
   @Prop() accessibility?: boolean = false;
 
+  /*
+   * Starting framework for code preview generation
+   */
+  @Prop() framework?: 'html' | 'react' | 'vue' | 'angular' = 'html';
+
   /* ---------------------------
    * State
    * --------------------------- */
 
   @State() showCode = true;
-  @State() activeFormat: 'html' | 'react' = 'html';
+  @State() activeFormat = '';
   @State() htmlCode = '';
   @State() reactCode = '';
+  @State() vueCode = '';
+  @State() angularCode = '';
   @State() copyLabel = 'Copy code';
   @State() lang = 'en';
 
@@ -60,6 +67,12 @@ export class CodeFrame {
     }
   }
 
+  @Watch('framework')
+  async onFrameworkChange() {
+    this.activeFormat = this.framework;
+    await this.updateDisplayedCode();
+  }
+
   /* ---------------------------
    * Lifecycle
    * --------------------------- */
@@ -67,6 +80,8 @@ export class CodeFrame {
   async componentWillLoad() {
     // Define lang attribute
     this.lang = assignLanguage(this.el);
+
+    this.activeFormat = this.framework;
   }
 
   componentDidLoad() {
@@ -106,6 +121,16 @@ export class CodeFrame {
   }
 
   /*
+  * Converts HTML code to Angular code
+  */
+  private convertToAngular(html: string) {
+    return html.replace(
+      /(\s|^)([a-zA-Z_:][-a-zA-Z0-9_:]*)="(true|false)"/gi,
+      '$1[$2]="$3"'
+    );
+  }
+
+  /*
    * Formats the source code and applies syntax highlighting
    */
   private async formatCodePreview() {
@@ -117,20 +142,40 @@ export class CodeFrame {
     });
 
     const react = this.convertToReact(code);
+    const angular = this.convertToAngular(code);
 
     this.htmlCode = Prism.highlight(code, Prism.languages.html, 'html');
+    this.vueCode = Prism.highlight(code, Prism.languages.html, 'html');
     this.reactCode = Prism.highlight(react, Prism.languages.jsx, 'jsx');
+    this.angularCode = Prism.highlight(angular, Prism.languages.html, 'html');
 
     this.updateDisplayedCode();
   }
 
   /*
-   * Updates the displayed code based on the active format (HTML or React)
+   * Updates the displayed code based on the active format
    */
   private updateDisplayedCode() {
     if (!this.codeEl) return;
 
-    this.codeEl.innerHTML = this.activeFormat === 'html' ? this.htmlCode : this.reactCode;
+    this.codeEl.innerHTML = this.getActiveCode();
+  }
+
+  /*
+  * Retrieves the code corresponding to the active format
+  */
+  private getActiveCode() {
+    switch (this.activeFormat) {
+      case 'react':
+        return this.reactCode;
+      case 'vue':
+        return this.vueCode;
+      case 'angular':
+        return this.angularCode;
+      case 'html':
+      default:
+        return this.htmlCode;
+    }
   }
 
   /* ---------------------------
@@ -142,7 +187,7 @@ export class CodeFrame {
    */
   private onFormatChange(e: Event) {
     const value = (e.target as HTMLSelectElement).value;
-    this.activeFormat = value === 'react' ? 'react' : 'html';
+    this.activeFormat = value as 'html' | 'react' | 'vue' | 'angular';
 
     this.updateDisplayedCode();
   }
@@ -151,7 +196,7 @@ export class CodeFrame {
    * Copies the current code to clipboard
    */
   private copyCode() {
-    const code = this.activeFormat === 'html' ? this.codeEl?.textContent : this.codeEl?.textContent;
+    const code = this.codeEl?.textContent;
 
     if (!code) return;
 
@@ -175,9 +220,11 @@ export class CodeFrame {
       <div class="code-frame">
         {/* Code actions bar: Format selection and toggle visibility */}
         <div class="code-actions-bar">
-          <gcds-select select-id="code-format" label="Select environment" hide-label name="select" onChange={e => this.onFormatChange(e)}>
+          <gcds-select select-id="code-format" label="Select environment" hide-label name="select" value={this.activeFormat} onChange={e => this.onFormatChange(e)}>
             <option value="html">HTML</option>
             <option value="react">React</option>
+            <option value="vue">Vue</option>
+            <option value="angular">Angular</option>
           </gcds-select>
           <gcds-button button-role="secondary" onClick={() => (this.showCode = !this.showCode)}>
             {this.showCode ? i18n[lang].hideLabel : i18n[lang].showLabel}

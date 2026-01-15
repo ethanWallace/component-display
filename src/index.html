@@ -23,7 +23,7 @@
 
       <gcds-heading tag="h2">Button</gcds-heading>
 
-      <component-display class="mt-300" lang="en">
+      <component-display class="mt-300" lang="en" framework="react">
         <gcds-button button-role="danger">Primary</gcds-button>
       </component-display>
 
@@ -145,69 +145,87 @@
       <script>
         const headerDisplay = document.getElementById('header-display');
 
-        const headerAttrs = [
-          {
-            name: 'lang-href',
-            control: 'text',
-            type: 'string',
-          },
-          {
-            name: 'skip-to-href',
-            control: 'text',
-            type: 'string',
-          },
-          {
-            name: 'signature-has-link',
-            control: 'select',
-            type: 'boolean',
-            options: '["true", "false"]',
-            defaultValue: 'true',
-          },
-          {
-            name: 'signature-variant',
-            control: 'select',
-            type: 'boolean',
-            options: '["colour", "white"]',
-            defaultValue: 'colour',
-          },
-          {
-            name: 'lang',
-            type: 'string',
-            control: 'select',
-            options: '["en", "fr"]',
-            defaultValue: 'en',
-          },
-        ];
+        const gcdsHeader = {
+          tag: 'gcds-header',
+          attributes: [
+            {
+              name: 'lang-href',
+              control: 'text',
+              type: 'string',
+              required: true,
+            },
+            {
+              name: 'signature-has-link',
+              control: 'select',
+              type: 'boolean',
+              defaultValue: 'true',
+              options: ['true', 'false'],
+            },
+            {
+              name: 'signature-variant',
+              control: 'select',
+              type: '"colour" | "white"',
+              options: ['colour', 'white'],
+            },
+            {
+              name: 'skip-to-href',
+              control: 'text',
+              type: 'string',
+              required: true,
+            },
+          ],
+          slots: [
+            {
+              name: 'banner',
+              description: 'Slot to add a banner across the top of the header.',
+            },
+            {
+              name: 'breadcrumb',
+              description: 'Slot to add breadcrumbs at the bottom of the header.',
+            },
+            {
+              name: 'menu',
+              description: 'Slot to add a menu below the divider line.',
+            },
+            {
+              name: 'search',
+              description: 'Slot to add a search field to the right of the header.',
+            },
+            {
+              name: 'signature',
+              description: 'Slot to replace Government of Canada signature.',
+            },
+            {
+              name: 'skip-to-nav',
+              description: 'Slot to add a hidden skip to content navigation at the top of the header.',
+            },
+            {
+              name: 'toggle',
+              description: 'Slot to add a custom language toggle in the top-right of the header.',
+            },
+          ],
+          events: [
+            {
+              name: 'gcdsBlur',
+              description: 'Emitted when the link loses focus.',
+              details: 'void',
+            },
+            {
+              name: 'gcdsClick',
+              description: 'Emitted when the link has been clicked. Contains the href in the event detail.',
+              details: 'string',
+            },
+            {
+              name: 'gcdsFocus',
+              description: 'Emitted when the link has focus.',
+              details: 'void',
+            },
+          ],
+        };
 
-        const headerSlots = [
-          {
-            name: 'menu',
-            description: 'Use this slot to add a menu to the header.',
-          },
-          {
-            name: 'breadcrumb',
-            description: 'Use this slot to add breadcrumbs to the header.',
-          },
-          {
-            name: 'search',
-            description: 'Use this slot to add a search to the header.',
-          },
-          {
-            name: 'toggle',
-            description: 'Use this slot to add a different language toggle to the header.',
-          },
-          {
-            name: 'banner',
-            description: 'Use this slot to add a banner to the header.',
-          },
-          {
-            name: 'skip-to-nav',
-            description: 'Use this slot to add a different skip-to-nav link to the header.',
-          },
-        ];
-
-        headerDisplay.attrs = headerAttrs;
-        headerDisplay.slots = headerSlots;
+        headerDisplay.attrs = gcdsHeader.attributes;
+        headerDisplay.slots = gcdsHeader.slots;
+        headerDisplay.events = gcdsHeader.events;
       </script>
 
       <component-display id="header-display" class="mb-400" accessibility landmark-display>
