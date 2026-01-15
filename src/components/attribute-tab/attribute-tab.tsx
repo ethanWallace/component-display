@@ -109,7 +109,7 @@ export class AttributeTab {
               return (
                 <tr>
                   <td>
-                    {attr.name}
+                    <span lang="en">{attr.name}</span>
                     {attr.required && (
                       <span
                         class="required"
@@ -121,8 +121,8 @@ export class AttributeTab {
                         </gcds-sr-only>
                       </span>
                     )}</td>
-                  <td>{attr?.type ? attr.type : <gcds-sr-only tag="span">{i18n[lang].noType}</gcds-sr-only>}</td>
-                  <td>{attr?.defaultValue ? attr.defaultValue : <gcds-sr-only>{i18n[lang].noDefaultValue}</gcds-sr-only>}</td>
+                  <td>{attr?.type ? <span lang="en">{attr.type}</span> : <gcds-sr-only tag="span">{i18n[lang].noType}</gcds-sr-only>}</td>
+                  <td>{attr?.defaultValue ? <span lang="en">{attr.defaultValue}</span> : <gcds-sr-only>{i18n[lang].noDefaultValue}</gcds-sr-only>}</td>
                   <td>{control}</td>
                 </tr>
               );

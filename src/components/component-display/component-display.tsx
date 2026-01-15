@@ -80,6 +80,11 @@ export class ComponentDisplay {
    */
   @Prop() landmarkDisplay?: boolean = false;
 
+  /*
+   * Starting framework for code preview generation
+   */
+  @Prop() framework?: 'html' | 'react' | 'vue' | 'angular' = 'html';
+
   /* ---------------------------
    * State
    * --------------------------- */
@@ -156,7 +161,7 @@ export class ComponentDisplay {
     return (
       <Host>
         {/* Component + code preview */}
-        <code-frame source={this.codeSource} landmarkDisplay={this.landmarkDisplay} accessibility={this.accessibility} lang={this.lang}>
+        <code-frame source={this.codeSource} landmarkDisplay={this.landmarkDisplay} accessibility={this.accessibility} framework={this.framework} lang={this.lang}>
           <slot></slot>
         </code-frame>
 

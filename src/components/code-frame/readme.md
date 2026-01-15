@@ -7,10 +7,12 @@
 
 ## Properties
 
-| Property          | Attribute          | Description | Type      | Default     |
-| ----------------- | ------------------ | ----------- | --------- | ----------- |
-| `landmarkDisplay` | `landmark-display` |             | `boolean` | `false`     |
-| `source`          | `source`           |             | `string`  | `undefined` |
+| Property          | Attribute          | Description | Type                                      | Default     |
+| ----------------- | ------------------ | ----------- | ----------------------------------------- | ----------- |
+| `accessibility`   | `accessibility`    |             | `boolean`                                 | `false`     |
+| `framework`       | `framework`        |             | `"angular" \| "html" \| "react" \| "vue"` | `'html'`    |
+| `landmarkDisplay` | `landmark-display` |             | `boolean`                                 | `false`     |
+| `source`          | `source`           |             | `string`                                  | `undefined` |
 
 
 ## Dependencies
