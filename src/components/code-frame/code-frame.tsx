@@ -81,6 +81,8 @@ export class CodeFrame {
     // Define lang attribute
     this.lang = assignLanguage(this.el);
 
+    this.copyLabel = i18n[this.lang].copyLabel;
+
     this.activeFormat = this.framework;
   }
 
