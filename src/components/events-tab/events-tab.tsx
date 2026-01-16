@@ -1,6 +1,6 @@
 import { Component, Host, h, Element, Prop, State } from '@stencil/core';
 
-import { EventType, assignLanguage } from '../../utils/utils';
+import { EventType, assignLanguage, formatDataLabel } from '../../utils/utils';
 import i18n from './i18n/i18n';
 
 @Component({
@@ -52,9 +52,9 @@ export class EventsTab {
           {this.eventObject.map(event => {
             return (
               <tr class={event.name}>
-                <td>{event.name}</td>
-                <td>{event.description}</td>
-                <td>{event.details}</td>
+                <td data-label={formatDataLabel(i18n[lang].name, lang)}>{event.name}</td>
+                <td data-label={formatDataLabel(i18n[lang].description, lang)}>{event.description}</td>
+                <td data-label={formatDataLabel(i18n[lang].details, lang)}>{event.details}</td>
               </tr>
             );
           })}

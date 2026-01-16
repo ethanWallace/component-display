@@ -233,7 +233,7 @@ export class CodeFrame {
 
         {/* Component preview area */}
         <div class="component-preview">
-          {this.landmarkDisplay ? <iframe title="Landmark elements display" ref={element => (this.landmarkIframe = element as HTMLIFrameElement)} /> : <slot></slot>}
+          {this.landmarkDisplay ? <iframe title={i18n[lang].componentExample} ref={element => (this.landmarkIframe = element as HTMLIFrameElement)} style={{ '--component-display-iframe-height': '12rem' }} /> : <slot></slot>}
         </div>
 
         {/* Code preview area: Displays the formatted code */}

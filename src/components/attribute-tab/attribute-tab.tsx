@@ -1,6 +1,6 @@
 import { Component, Host, h, Element, Prop, Event, EventEmitter, State } from '@stencil/core';
 
-import { AttributesType, assignLanguage, closestElement } from '../../utils/utils';
+import { AttributesType, assignLanguage, closestElement, formatDataLabel } from '../../utils/utils';
 import i18n from './i18n/i18n';
 
 @Component({
@@ -108,7 +108,7 @@ export class AttributeTab {
 
               return (
                 <tr>
-                  <td>
+                  <td data-label={formatDataLabel(i18n[lang].attributes, lang)}>
                     <span lang="en">{attr.name}</span>
                     {attr.required && (
                       <span
@@ -121,9 +121,9 @@ export class AttributeTab {
                         </gcds-sr-only>
                       </span>
                     )}</td>
-                  <td>{attr?.type ? <span lang="en">{attr.type}</span> : <gcds-sr-only tag="span">{i18n[lang].noType}</gcds-sr-only>}</td>
-                  <td>{attr?.defaultValue ? <span lang="en">{attr.defaultValue}</span> : <gcds-sr-only>{i18n[lang].noDefaultValue}</gcds-sr-only>}</td>
-                  <td>{control}</td>
+                  <td data-label={formatDataLabel(i18n[lang].type, lang)}>{attr?.type ? <span lang="en">{attr.type}</span> : <gcds-sr-only tag="span">{i18n[lang].noType}</gcds-sr-only>}</td>
+                  <td data-label={formatDataLabel(i18n[lang].defaultValue, lang)}>{attr?.defaultValue ? <span lang="en">{attr.defaultValue}</span> : <gcds-sr-only>{i18n[lang].noDefaultValue}</gcds-sr-only>}</td>
+                  <td data-label={formatDataLabel(i18n[lang].control, lang)}>{control}</td>
                 </tr>
               );
             })}

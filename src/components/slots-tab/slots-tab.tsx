@@ -1,7 +1,7 @@
 import { Component, Host, h, Element, Prop, Event, EventEmitter, State } from '@stencil/core';
 import DOMPurify from 'dompurify';
 
-import { assignLanguage, SlotType } from '../../utils/utils';
+import { assignLanguage, SlotType, formatDataLabel } from '../../utils/utils';
 import i18n from './i18n/i18n';
 
 @Component({
@@ -120,9 +120,9 @@ export class SlotsTab {
             );
             return (
               <tr>
-                <td>{slot.name}</td>
-                <td>{slot.description}</td>
-                <td>{control}</td>
+                <td data-label={formatDataLabel(i18n[lang].name, lang)}>{slot.name}</td>
+                <td data-label={formatDataLabel(i18n[lang].description, lang)}>{slot.description}</td>
+                <td data-label={formatDataLabel(i18n[lang].control, lang)}>{control}</td>
               </tr>
             );
           })}

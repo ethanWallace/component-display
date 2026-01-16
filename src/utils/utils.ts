@@ -84,3 +84,7 @@ export const formatSrcDoc = (displayElement: string, accessibility: boolean = fa
 
   return doc;
 };
+
+export const formatDataLabel = (label: string, lang: string) => {
+  return lang === 'fr' ? `${label} : ` : `${label}:`;
+};

@@ -1,6 +1,6 @@
 const I18N = {
   en: {
-    attributes: 'Attributes',
+    attributes: 'Attribute',
     type: 'Type',
     defaultValue: 'Default value',
     control: 'Control',
@@ -9,7 +9,7 @@ const I18N = {
     required: 'required',
   },
   fr: {
-    attributes: 'Attributs',
+    attributes: 'Attribut',
     type: 'Type',
     defaultValue: 'Valeur par défaut',
     control: 'Contrôle',

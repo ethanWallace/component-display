@@ -39,7 +39,7 @@
 
       iframe {
         width: 100%;
-        height: 300px;
+        height: var(--component-display-iframe-height, 12rem);
         border: none;
       }
     }
