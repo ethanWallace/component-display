@@ -89,7 +89,7 @@ export class ComponentDisplay {
    * State
    * --------------------------- */
 
-  @State() display: 'attrs' | 'slots' | 'events' | 'a11y' = 'attrs';
+  @State() display: 'attrs' | 'slots' | 'events' | 'a11y' | null = null;
   @State() lang = 'en';
   @State() codeSource = '';
 
@@ -114,6 +114,26 @@ export class ComponentDisplay {
     }
   }
 
+  @Listen('keydown', { target: 'document' })
+  async keyDownListener(e) {
+    if (this.el.contains(document.activeElement)) {
+      if (this.el.shadowRoot.activeElement.getAttribute('role') === 'presentation' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+        e.preventDefault();
+        const buttons = Array.from(this.el.shadowRoot.querySelectorAll('div[role="tablist"] gcds-button'));
+        const currentIndex = buttons.findIndex(button => this.el.shadowRoot.activeElement === button);
+        let newIndex;
+
+        if (e.key === 'ArrowRight') {
+          newIndex = (currentIndex + 1) % buttons.length;
+        } else if (e.key === 'ArrowLeft') {
+          newIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+        }
+
+        buttons[newIndex].shadowRoot.querySelector('button').focus();
+      }
+    }
+  }
+
   /* ---------------------------
    * Lifecycle
    * --------------------------- */
@@ -128,6 +148,35 @@ export class ComponentDisplay {
     this.validateEvents();
 
     this.updateCodePreview();
+
+    // Set current tab display
+    if (this.attributeObject || this.slotObject || this.eventObject || this.accessibility) {
+      if (this.attrs) {
+        this.setDisplay('attrs');
+      } else if (this.slots) {
+        this.setDisplay('slots');
+      } else if (this.events) {
+        this.setDisplay('events');
+      } else if (this.accessibility) {
+        this.setDisplay('a11y');
+      }
+    }
+  }
+
+  async componentDidLoad() {
+    this.setDisplay(this.display);
+
+    if (this.attributeObject || this.slotObject || this.eventObject || this.accessibility) {
+      this.el.shadowRoot.querySelectorAll('div[role="tablist"] gcds-button').forEach(button => {
+        button.shadowRoot.querySelector('button').setAttribute('role', 'tab');
+
+        if (button.id === this.display) {
+          button.shadowRoot.querySelector('button').setAttribute('aria-selected', 'true');
+        } else {
+          button.shadowRoot.querySelector('button').setAttribute('aria-selected', 'false');
+        }
+      });
+    }
   }
 
   /* ---------------------------
@@ -149,6 +198,14 @@ export class ComponentDisplay {
 
   private setDisplay(tab: typeof this.display) {
     this.display = tab;
+
+    this.el.shadowRoot.querySelectorAll('div[role="tablist"] gcds-button').forEach(button => {
+      if (button.id === tab) {
+        button.shadowRoot.querySelector('button').setAttribute('aria-selected', 'true');
+      } else {
+        button.shadowRoot.querySelector('button').setAttribute('aria-selected', 'false');
+      }
+    });
   }
 
   /* ---------------------------
@@ -172,27 +229,27 @@ export class ComponentDisplay {
             <div role="tablist">
               {this.attributeObject && (
                 <gcds-button
-                  id="attributes"
+                  id="attrs"
                   button-role="secondary"
-                  role="tab"
+                  role="presentation"
                   onClick={() => this.setDisplay('attrs')}
-                  aria-selected={this.display === 'attrs' ? 'true' : 'false'}
+                  class={this.display == 'attrs' && 'selected'}
                 >
                   {i18n[lang].tabsAttributes}
                 </gcds-button>
               )}
               {this.slotObject && (
-                <gcds-button id="slots" button-role="secondary" role="tab" onClick={() => this.setDisplay('slots')} aria-selected={this.display === 'slots' ? 'true' : 'false'}>
+                <gcds-button id="slots" button-role="secondary" role="presentation" class={this.display == 'slots' && 'selected'} onClick={() => this.setDisplay('slots')}>
                   {i18n[lang].tabsSlots}
                 </gcds-button>
               )}
               {this.eventObject && (
-                <gcds-button id="events" button-role="secondary" role="tab" onClick={() => this.setDisplay('events')} aria-selected={this.display === 'events' ? 'true' : 'false'}>
+                <gcds-button id="events" button-role="secondary" role="presentation" class={this.display == 'events' && 'selected'} onClick={() => this.setDisplay('events')}>
                   {i18n[lang].tabsEvents}
                 </gcds-button>
               )}
               {this.accessibility && (
-                <gcds-button id="a11y" button-role="secondary" role="tab" onClick={() => this.setDisplay('a11y')} aria-selected={this.display === 'a11y' ? 'true' : 'false'}>
+                <gcds-button id="a11y" button-role="secondary" role="presentation" class={this.display == 'a11y' && 'selected'} onClick={() => this.setDisplay('a11y')}>
                   {i18n[lang].tabsA11y}
                 </gcds-button>
               )}
