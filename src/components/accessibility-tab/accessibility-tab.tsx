@@ -93,7 +93,7 @@ export class AccessibilityTab {
   renderAxeResultsTable() {
     if (this.axeResults && this.axeResults.violations.length > 0) {
       return (
-        <table>
+        <table class="axe-results-table">
           <thead>
             <tr>
               <th>{i18n[this.lang].violationID}</th>
@@ -130,7 +130,7 @@ export class AccessibilityTab {
       );
     } else if (this.axeResults) {
       return (
-        <table>
+        <table class="axe-results-table">
           <thead>
             <tr>
               <th>{i18n[this.lang].test}</th>

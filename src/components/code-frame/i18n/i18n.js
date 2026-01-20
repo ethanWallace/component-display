@@ -5,6 +5,7 @@ const I18N = {
     hideLabel: 'Hide code',
     showLabel: 'Show code',
     componentExample: 'Component example',
+    selectEnvironment: 'Select environment',
   },
   fr: {
     copyLabel: 'Copier le code',
@@ -12,6 +13,7 @@ const I18N = {
     hideLabel: 'Masquer le code',
     showLabel: 'Voir le code',
     componentExample: 'Exemple de composant',
+    selectEnvironment: "Sélectionner l'environnement",
   },
 };
 

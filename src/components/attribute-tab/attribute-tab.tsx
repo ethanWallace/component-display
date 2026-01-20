@@ -123,7 +123,7 @@ export class AttributeTab {
                     )}</td>
                   <td data-label={formatDataLabel(i18n[lang].type, lang)}>{attr?.type ? <span lang="en">{attr.type}</span> : <gcds-sr-only tag="span">{i18n[lang].noType}</gcds-sr-only>}</td>
                   <td data-label={formatDataLabel(i18n[lang].defaultValue, lang)}>{attr?.defaultValue ? <span lang="en">{attr.defaultValue}</span> : <gcds-sr-only>{i18n[lang].noDefaultValue}</gcds-sr-only>}</td>
-                  <td data-label={formatDataLabel(i18n[lang].control, lang)}>{control}</td>
+                  <td>{control}</td>
                 </tr>
               );
             })}

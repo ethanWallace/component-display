@@ -122,7 +122,7 @@ export class SlotsTab {
               <tr>
                 <td data-label={formatDataLabel(i18n[lang].name, lang)}>{slot.name}</td>
                 <td data-label={formatDataLabel(i18n[lang].description, lang)}>{slot.description}</td>
-                <td data-label={formatDataLabel(i18n[lang].control, lang)}>{control}</td>
+                <td>{control}</td>
               </tr>
             );
           })}
