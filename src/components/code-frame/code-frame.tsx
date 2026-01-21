@@ -3,7 +3,7 @@ import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
 import prettier from 'prettier/standalone';
 import prettierPluginHTML from 'prettier/plugins/html';
-import { formatSrcDoc, assignLanguage } from '../../utils/utils';
+import { formatSrcDoc, assignLanguage, iframeListeners } from '../../utils/utils';
 import i18n from './i18n/i18n';
 
 @Component({
@@ -91,6 +91,18 @@ export class CodeFrame {
 
     if (this.landmarkDisplay && this.landmarkIframe) {
       this.landmarkIframe.srcdoc = formatSrcDoc(this.source, this.accessibility, this.lang);
+
+      this.landmarkIframe.onload = () => {
+        const intervalId = setInterval(() => {
+          const hydratedComponent = this.landmarkIframe.contentDocument.body.querySelector('.hydrated');
+
+          if (hydratedComponent) {
+            clearInterval(intervalId);
+
+            iframeListeners(this.landmarkIframe!);
+          }
+        }, 100);
+      }
     }
   }
 
@@ -141,6 +153,9 @@ export class CodeFrame {
     const code = await prettier.format(this.source, {
       parser: 'html',
       plugins: [prettierPluginHTML],
+      printWidth: 120,
+      htmlWhitespaceSensitivity: 'ignore',
+      singleQuote: true
     });
 
     const react = this.convertToReact(code);

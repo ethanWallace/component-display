@@ -23,51 +23,15 @@
 
       <gcds-heading tag="h2">Button</gcds-heading>
 
+      <gcds-heading tag="h3">Only code display</gcds-heading>
+
       <component-display class="mt-300" lang="fr" framework="react">
-        <gcds-button button-role="danger">Primary</gcds-button>
+        <gcds-button button-role="danger">Danger</gcds-button>
       </component-display>
 
-      <component-display
-        class="mt-300"
-        attrs='[
-          {
-            "name": "button-id",
-            "control": "text",
-            "type": "string"
-          },
-          {
-            "name": "button-role",
-            "control": "select",
-            "type": "string",
-            "options": "[\"primary\", \"secondary\", \"danger\", \"start\"]",
-            "defaultValue": "primary"
-          },
-          {
-            "name": "nope",
-            "control": "none"
-          }
-        ]'
-        slots='[
-          {
-            "name": "default",
-            "description": "The default slot allows inputting the button label."
-          }
-        ]'
-        events='[
-          {
-            "name": "gcdsBlur",
-            "description": "Custom event that fires when the element loses focus",
-            "details": "-"
-          },
-          {
-            "name": "gcdsFocus",
-            "description": "Custom event that fires when the element gains focus",
-            "details": "-"
-          }
-        ]'
-        accessibility
-        lang="en"
-      >
+      <gcds-heading tag="h3">With tabs</gcds-heading>
+
+      <component-display class="mt-300" accessibility id="button-display" lang="en">
         <gcds-button button-role="start">Start</gcds-button>
       </component-display>
 
@@ -79,6 +43,8 @@
 
       <gcds-heading tag="h2">Header</gcds-heading>
 
+      <p>Rendered using the landmark-display property to render the component within an iframe to not confuse the main page's landmarks.</p>
+
       <component-display id="header-display" class="mb-400" accessibility landmark-display>
         <gcds-header>
           <gcds-search slot="search"></gcds-search>
@@ -88,6 +54,30 @@
           </gcds-breadcrumbs>
         </gcds-header>
       </component-display>
+
+      <gcds-grid columns="minmax(0, 1fr)" columns-desktop="320px minmax(0, 1fr)" tag="div" container="xl" centered class="xl:px-0 sm:px-600 px-225 general-layout">
+        <div>This is a placeholder, testing how a zoom out view might work since this is how our docs site is configured</div>
+        <div>
+          <gcds-heading tag="h2">Top-nav</gcds-heading>
+
+          <component-display id="header-display" class="mb-400" accessibility landmark-display>
+            <gcds-top-nav label="Top navigation" alignment="right">
+              <gcds-nav-link href="#home" slot="home">GC Notify</gcds-nav-link>
+              <gcds-nav-link href="#">Why GC Notify</gcds-nav-link>
+              <gcds-nav-link href="#">Why GC Notify</gcds-nav-link>
+
+              <gcds-nav-group open-trigger="Features" menu-label="Features">
+                <gcds-nav-link href="#">Create reusable templates</gcds-nav-link>
+                <gcds-nav-link href="#">Personalize messages</gcds-nav-link>
+                <gcds-nav-link href="#" current>Schedule messages</gcds-nav-link>
+                <gcds-nav-link href="#">Send messages automatically</gcds-nav-link>
+              </gcds-nav-group>
+
+              <gcds-nav-link href="#">Contact us</gcds-nav-link>
+            </gcds-top-nav>
+          </component-display>
+        </div>
+      </gcds-grid>
 
       <script>
         const headerDisplay = document.getElementById('header-display');
@@ -374,24 +364,103 @@
         const inputDisplay = document.getElementById('input-display');
         inputDisplay.attrs = gcdsInput.attributes;
         inputDisplay.events = gcdsInput.events;
+
+        const gcdsButton = {
+          tag: 'gcds-button',
+          attributes: [
+            {
+              name: 'button-id',
+              control: 'text',
+              type: 'string',
+            },
+            {
+              name: 'button-role',
+              control: 'select',
+              type: '"danger" | "primary" | "secondary" | "start"',
+              defaultValue: 'primary',
+              options: ['danger', 'primary', 'secondary', 'start'],
+            },
+            {
+              name: 'disabled',
+              control: 'select',
+              type: 'boolean',
+              options: ['true', 'false'],
+            },
+            {
+              name: 'download',
+              control: 'text',
+              type: 'string',
+            },
+            {
+              name: 'href',
+              control: 'text',
+              type: 'string',
+            },
+            {
+              name: 'name',
+              control: 'text',
+              type: 'string',
+            },
+            {
+              name: 'rel',
+              control: 'text',
+              type: 'string',
+            },
+            {
+              name: 'size',
+              control: 'select',
+              type: '"regular" | "small"',
+              defaultValue: 'regular',
+              options: ['regular', 'small'],
+            },
+            {
+              name: 'target',
+              control: 'text',
+              type: 'string',
+            },
+            {
+              name: 'type',
+              control: 'select',
+              type: '"button" | "link" | "reset" | "submit"',
+              defaultValue: 'button',
+              options: ['button', 'link', 'reset', 'submit'],
+            },
+            {
+              name: 'value',
+              control: 'text',
+              type: 'string',
+            },
+          ],
+          slots: [
+            {
+              name: 'default',
+              description: 'Slot for the button/link label.',
+            },
+          ],
+          events: [
+            {
+              name: 'gcdsBlur',
+              description: 'Emitted when the button loses focus.',
+              details: 'void',
+            },
+            {
+              name: 'gcdsClick',
+              description: 'Emitted when the button has been clicked. Contains the value or href in the event detail.',
+              details: 'string | void',
+            },
+            {
+              name: 'gcdsFocus',
+              description: 'Emitted when the button has focus.',
+              details: 'void',
+            },
+          ],
+        };
+
+        const buttonDisplay = document.getElementById('button-display');
+        buttonDisplay.attrs = gcdsButton.attributes;
+        buttonDisplay.events = gcdsButton.events;
+        buttonDisplay.slots = gcdsButton.slots;
       </script>
-
-      <!-- <component-display id="header-display" class="mb-400" accessibility landmark-display>
-        <gcds-top-nav label="Top navigation" alignment="right">
-          <gcds-nav-link href="#home" slot="home">GC Notify</gcds-nav-link>
-          <gcds-nav-link href="#">Why GC Notify</gcds-nav-link>
-          <gcds-nav-link href="#">Why GC Notify</gcds-nav-link>
-
-          <gcds-nav-group open-trigger="Features" menu-label="Features">
-            <gcds-nav-link href="#" current>Create reusable templates</gcds-nav-link>
-            <gcds-nav-link href="#">Personalize messages</gcds-nav-link>
-            <gcds-nav-link href="#">Schedule messages</gcds-nav-link>
-            <gcds-nav-link href="#">Send messages automatically</gcds-nav-link>
-          </gcds-nav-group>
-
-          <gcds-nav-link href="#">Contact us</gcds-nav-link>
-        </gcds-top-nav>
-      </component-display> -->
     </gcds-container>
   </body>
 </html>

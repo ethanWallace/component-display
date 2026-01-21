@@ -114,7 +114,7 @@ export class SlotsTab {
                 value={this.slotHistory[slot.name]}
                 error-message={this.slotErrors[slot.name]}
                 validate-on="other"
-                onInput={e => this.emitSlotEvent(e)}
+                onChange={e => this.emitSlotEvent(e)}
                 lang={this.lang}
               ></gcds-textarea>
             );
