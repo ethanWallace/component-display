@@ -6,7 +6,7 @@ const I18N = {
     control: 'Control',
     noType: 'No type specified',
     noDefaultValue: 'No default value',
-    required: 'required',
+    required: ' (required)',
   },
   fr: {
     attributes: 'Attribut',
@@ -15,7 +15,7 @@ const I18N = {
     control: 'Contrôle',
     noType: 'Aucun type spécifié',
     noDefaultValue: 'Aucune valeur par défaut',
-    required: 'obligatoire',
+    required: ' (obligatoire)',
   },
 };
 

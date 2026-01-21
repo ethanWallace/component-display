@@ -113,12 +113,9 @@ export class AttributeTab {
                     {attr.required && (
                       <span
                         class="required"
-                        title={i18n[lang].required}
+                        aria-hidden="true"
                       >
-                        <span aria-hidden="true">*</span>
-                        <gcds-sr-only tag="span">
-                          {i18n[lang].required}
-                        </gcds-sr-only>
+                        {i18n[lang].required}
                       </span>
                     )}</td>
                   <td data-label={formatDataLabel(i18n[lang].type, lang)}>{attr?.type ? <span lang="en">{attr.type}</span> : <gcds-sr-only tag="span">{i18n[lang].noType}</gcds-sr-only>}</td>
