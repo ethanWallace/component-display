@@ -61,6 +61,16 @@
           <gcds-heading tag="h2">Top-nav</gcds-heading>
 
           <component-display id="header-display" class="mb-400" accessibility landmark-display>
+            <gcds-header>
+              <gcds-search slot="search"></gcds-search>
+              <gcds-breadcrumbs slot="breadcrumb">
+                <gcds-breadcrumbs-item href="#">Design System</gcds-breadcrumbs-item>
+                <gcds-breadcrumbs-item href="#">Components</gcds-breadcrumbs-item>
+              </gcds-breadcrumbs>
+            </gcds-header>
+          </component-display>
+
+          <component-display class="mb-400" accessibility landmark-display>
             <gcds-top-nav label="Top navigation" alignment="right">
               <gcds-nav-link href="#home" slot="home">GC Notify</gcds-nav-link>
               <gcds-nav-link href="#">Why GC Notify</gcds-nav-link>

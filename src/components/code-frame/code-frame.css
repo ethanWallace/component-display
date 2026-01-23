@@ -42,6 +42,14 @@
         height: var(--component-display-iframe-height, 12rem);
         border: none;
       }
+
+      @media only screen and (width >= 64em) {
+        overflow-x: scroll;
+
+        iframe {
+          width: var(--gcds-container-size-xl);
+        }
+      }
     }
 
     .code-preview {
