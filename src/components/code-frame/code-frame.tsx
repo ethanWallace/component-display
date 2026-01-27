@@ -129,7 +129,7 @@ export class CodeFrame {
 
     if (!componentName) return code;
 
-    const importStatement = `import { ${componentName[0].replace('<', '')} } from '@cdssnc/gcds-components-react';\n\n`;
+    const importStatement = `import { ${componentName[0].replace('<', '')} } from '@gcds-core/components-react';\n\n`;
 
     return importStatement + code;
   }
