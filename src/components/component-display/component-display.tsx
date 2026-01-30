@@ -102,6 +102,7 @@ export class ComponentDisplay {
     if (e.target === this.el) {
       this.displayElement.setAttribute(e.detail.name, e.detail.value);
       this.updateCodePreview();
+      this.updateStatus('attribute', e.detail.name);
     }
   }
 
@@ -111,6 +112,7 @@ export class ComponentDisplay {
       this.slotHistory[e.detail.name] = e.detail.value;
       this.renderSlotContent();
       this.updateCodePreview();
+      this.updateStatus('slot', e.detail.name);
     }
   }
 
@@ -208,6 +210,24 @@ export class ComponentDisplay {
     });
   }
 
+  private updateStatus(type: 'attribute' | 'slot', name: string) {
+    setTimeout(() => {
+      const statusEl = this.el.shadowRoot.getElementById('change-status');
+      if (statusEl) {
+        if (type === 'attribute') {
+          statusEl.textContent = i18n[this.lang].attributeUpdateStatus.replaceAll('{name}', name);
+        } else {
+          statusEl.textContent = i18n[this.lang].slotUpdateStatus.replaceAll('{name}', name);
+        }
+      }
+      setTimeout(() => {
+        if (statusEl) {
+          statusEl.textContent = '';
+        }
+      }, 2000);
+    }, 1500);
+  }
+
   /* ---------------------------
    * Render
    * --------------------------- */
@@ -273,6 +293,10 @@ export class ComponentDisplay {
                 lang={this.lang}
               ></accessibility-tab>
             )}
+            {/* Change status */}
+            <gcds-sr-only tag="span">
+              <span id="change-status" role="status" aria-atomic="true"></span>
+            </gcds-sr-only>
           </div>
         ) : null}
       </Host>
