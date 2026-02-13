@@ -18,6 +18,7 @@
 | Event             | Description | Type                  |
 | ----------------- | ----------- | --------------------- |
 | `attributeChange` |             | `CustomEvent<Object>` |
+| `statusUpdate`    |             | `CustomEvent<Object>` |
 
 
 ## Dependencies

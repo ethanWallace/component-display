@@ -234,7 +234,7 @@ export class CodeFrame {
     const { lang } = this;
 
     return (
-      <div class="code-frame">
+      <section class="code-frame" aria-label={i18n[lang].componentPreview}>
         {/* Code actions bar: Format selection and toggle visibility */}
         <div class="code-actions-bar">
           <gcds-select select-id="code-format" label={i18n[lang].selectEnvironment} hide-label name="select" value={this.activeFormat} onChange={e => this.onFormatChange(e)}>
@@ -273,7 +273,7 @@ export class CodeFrame {
             )}
           </pre>
         </div>
-      </div>
+      </section>
     );
   }
 }

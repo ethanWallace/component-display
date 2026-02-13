@@ -12,6 +12,9 @@ import i18n from './i18n/i18n';
 export class SlotsTab {
   @Element() el: HTMLElement;
 
+  private valueChecker: number | null = null;
+  private lastInputValue = {};
+
   /* ---------------------------
    * Props
    * --------------------------- */
@@ -25,6 +28,7 @@ export class SlotsTab {
    * --------------------------- */
 
   @Event() slotValueChange!: EventEmitter<Object>;
+  @Event() statusUpdate!: EventEmitter<Object>;
 
   /* ---------------------------
    * State
@@ -32,6 +36,7 @@ export class SlotsTab {
 
   @State() lang: string = 'en';
   @State() slotErrors: { [k: string]: string } = {};
+  @State() lastInputTimestamp = [];
 
   /* ---------------------------
    * Actions
@@ -78,6 +83,27 @@ export class SlotsTab {
     this.slotValueChange.emit(eventDetail);
   }
 
+  private onFocusStartInterval = (e) => {
+    const element = e.target.shadowRoot.querySelector(`[name="${e.target.name}"]`);
+    const value = element.value;
+    const name = element.name;
+    // Start value checking on input
+    this.valueChecker = window.setInterval(() => {
+      if (Date.now() - 500 >= this.lastInputTimestamp[name]) {
+        if (value !== this.lastInputValue[name] && this.slotErrors[name] === '') {
+          this.statusUpdate.emit({ name: name, type: 'slot' });
+          clearInterval(this.valueChecker);
+        }
+      }
+    }, 1000);
+  };
+
+  private onBlurClearInterval = () => {
+    if (this.valueChecker) {
+      window.clearInterval(this.valueChecker);
+    }
+  };
+
   /* ---------------------------
    * Lifecycle
    * --------------------------- */
@@ -105,6 +131,7 @@ export class SlotsTab {
           </tr>
 
           {this.slotObject.map(slot => {
+            this.lastInputValue = { ...this.lastInputValue, [slot.name]: this.slotHistory[slot.name] };
             const control = (
               <gcds-textarea
                 label={slot.name}
@@ -115,6 +142,8 @@ export class SlotsTab {
                 error-message={this.slotErrors[slot.name]}
                 validate-on="other"
                 onChange={e => this.emitSlotEvent(e)}
+                onFocus={e => this.onFocusStartInterval(e)}
+                onBlur={this.onBlurClearInterval}
                 lang={this.lang}
               ></gcds-textarea>
             );

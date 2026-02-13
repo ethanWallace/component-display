@@ -19,6 +19,7 @@
 | Event             | Description | Type                  |
 | ----------------- | ----------- | --------------------- |
 | `slotValueChange` |             | `CustomEvent<Object>` |
+| `statusUpdate`    |             | `CustomEvent<Object>` |
 
 
 ## Dependencies

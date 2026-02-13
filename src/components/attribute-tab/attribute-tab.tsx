@@ -11,6 +11,9 @@ import i18n from './i18n/i18n';
 export class AttributeTab {
   @Element() el: HTMLElement;
 
+  private valueChecker: number | null = null;
+  private lastInputValue = {};
+
   /* ---------------------------
    * Props
    * --------------------------- */
@@ -23,12 +26,14 @@ export class AttributeTab {
    * --------------------------- */
 
   @Event() attributeChange!: EventEmitter<Object>;
+  @Event() statusUpdate!: EventEmitter<Object>;
 
   /* ---------------------------
    * State
    * --------------------------- */
 
   @State() lang: string = 'en';
+  @State() lastInputTimestamp = [];
 
   /* ---------------------------
    * Helpers
@@ -40,7 +45,36 @@ export class AttributeTab {
       value: e.target.value,
     };
 
+    // Store timestamp and value of element for comparison in interval
+    this.lastInputTimestamp[e.target.name] = Date.now();
+    this.lastInputValue[e.target.name] = e.target.value;
+
     this.attributeChange.emit(eventDetail);
+  }
+
+  private onFocusStartInterval = (e) => {
+    const element = e.target.shadowRoot.querySelector(`[name="${e.target.name}"]`);
+    const value = element.value;
+    const name = element.name;
+    // Start value checking on input
+    this.valueChecker = window.setInterval(() => {
+      if (
+
+        Date.now() - 500 >= this.lastInputTimestamp[name]
+      ) {
+        if (value !== this.lastInputValue[name]) {
+          this.statusUpdate.emit({ name: name, type: 'attribute' });
+          clearInterval(this.valueChecker);
+        }
+      }
+    }, 1000);
+
+  }
+
+  private onBlurClearInterval = () => {
+    if (this.valueChecker) {
+      window.clearInterval(this.valueChecker);
+    }
   }
 
   /* ---------------------------
@@ -79,11 +113,22 @@ export class AttributeTab {
                 displayValue = closestElement('[lang]', this.displayElement).getAttribute('lang') || displayValue;
               }
 
+              this.lastInputValue = { ...this.lastInputValue, [attr.name]: displayValue };
+
               if (attr.control === 'select') {
                 const options = typeof attr.options === 'string' ? JSON.parse(attr.options) : attr.options;
 
                 control = (
-                  <gcds-select label={attr.name} selectId={attr.name} name={attr.name} value={displayValue} hide-label onInput={e => this.formatEventDetail(e)}>
+                  <gcds-select
+                    label={attr.name}
+                    selectId={attr.name}
+                    name={attr.name}
+                    value={displayValue}
+                    hide-label
+                    onInput={e => this.formatEventDetail(e)}
+                    onFocus={e => this.onFocusStartInterval(e)}
+                    onBlur={this.onBlurClearInterval}
+                  >
                     {typeof options === 'object' &&
                       options.map(option => (
                         <option key={option} value={option}>
@@ -102,6 +147,8 @@ export class AttributeTab {
                     type="text"
                     value={displayValue}
                     onInput={e => this.formatEventDetail(e)}
+                    onFocus={e => this.onFocusStartInterval(e)}
+                    onBlur={this.onBlurClearInterval}
                   ></gcds-input>
                 );
               }

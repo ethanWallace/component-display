@@ -76,6 +76,7 @@ declare global {
     };
     interface HTMLAttributeTabElementEventMap {
         "attributeChange": Object;
+        "statusUpdate": Object;
     }
     interface HTMLAttributeTabElement extends Components.AttributeTab, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAttributeTabElementEventMap>(type: K, listener: (this: HTMLAttributeTabElement, ev: AttributeTabCustomEvent<HTMLAttributeTabElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -111,6 +112,7 @@ declare global {
     };
     interface HTMLSlotsTabElementEventMap {
         "slotValueChange": Object;
+        "statusUpdate": Object;
     }
     interface HTMLSlotsTabElement extends Components.SlotsTab, HTMLStencilElement {
         addEventListener<K extends keyof HTMLSlotsTabElementEventMap>(type: K, listener: (this: HTMLSlotsTabElement, ev: SlotsTabCustomEvent<HTMLSlotsTabElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -144,6 +146,7 @@ declare namespace LocalJSX {
         "attributeObject"?: Array<AttributesType>;
         "displayElement": Element;
         "onAttributeChange"?: (event: AttributeTabCustomEvent<Object>) => void;
+        "onStatusUpdate"?: (event: AttributeTabCustomEvent<Object>) => void;
     }
     interface CodeFrame {
         /**
@@ -183,6 +186,7 @@ declare namespace LocalJSX {
     interface SlotsTab {
         "displayElement": Element;
         "onSlotValueChange"?: (event: SlotsTabCustomEvent<Object>) => void;
+        "onStatusUpdate"?: (event: SlotsTabCustomEvent<Object>) => void;
         "slotHistory"?: Object;
         "slotObject"?: Array<SlotType>;
     }

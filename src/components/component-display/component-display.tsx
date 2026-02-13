@@ -106,6 +106,13 @@ export class ComponentDisplay {
     }
   }
 
+  @Listen('statusUpdate', { target: 'document' })
+  statusUpdateListener(e) {
+    if (e.target === this.el) {
+      this.updateStatus(e.detail.type, e.detail.name);
+    }
+  }
+
   @Listen('slotValueChange', { target: 'document' })
   slotValueChangeListener(e) {
     if (e.target === this.el) {
@@ -224,7 +231,7 @@ export class ComponentDisplay {
         if (statusEl) {
           statusEl.textContent = '';
         }
-      }, 2000);
+      }, 5000);
     }, 1500);
   }
 
@@ -295,7 +302,7 @@ export class ComponentDisplay {
             )}
             {/* Change status */}
             <gcds-sr-only tag="span">
-              <span id="change-status" role="status" aria-atomic="true"></span>
+              <span id="change-status" role="status" aria-atomic="true" aria-relevant="removals"></span>
             </gcds-sr-only>
           </div>
         ) : null}
