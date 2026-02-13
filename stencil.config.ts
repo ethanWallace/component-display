@@ -21,7 +21,7 @@ export const config: Config = {
       serviceWorker: null, // disable service workers
       copy: [
         {
-          src: '../node_modules/@cdssnc/gcds-components/dist/gcds',
+          src: '../node_modules/@gcds-core/components/dist/gcds',
           dest: 'components/dist',
         },
       ],
