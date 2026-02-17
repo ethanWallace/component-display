@@ -1,0 +1,77 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Slots tab - Component display</title>
+
+    <script type="module" src="../dist/component-display/component-display.esm.js"></script>
+    <script nomodule src="../dist/component-display/component-display.js"></script>
+
+    <!-- GC Design System -->
+    <link rel="stylesheet" href="../components/dist/gcds.css" />
+    <script type="module" src="../components/dist/gcds.esm.js"></script>
+
+    <!-- GC Design System Utility -->
+    <link rel="stylesheet" href="https://cdn.design-system.canada.ca/@gcds-core/css-shortcuts@latest/dist/gcds-css-shortcuts.min.css" />
+  </head>
+  <body>
+    <gcds-container layout="page" tag="main" class="pt-300">
+      <gcds-heading tag="h1">Slots tab</gcds-heading>
+
+      <gcds-text>The <code>slots-tab</code> displays a component's slots in a tabbed interface.</gcds-text>
+      <gcds-text>The description for each slot is passed through the slots property of the component-display element.</gcds-text>
+
+      <component-display id="header-display" class="mb-400" landmark-display>
+        <gcds-header>
+          <gcds-search slot="search"></gcds-search>
+          <gcds-breadcrumbs slot="breadcrumb">
+            <gcds-breadcrumbs-item href="#">Design System</gcds-breadcrumbs-item>
+            <gcds-breadcrumbs-item href="#">Components</gcds-breadcrumbs-item>
+          </gcds-breadcrumbs>
+        </gcds-header>
+      </component-display>
+
+      <script>
+        const headerDisplay = document.getElementById('header-display');
+
+        const gcdsHeader = {
+          tag: 'gcds-header',
+          slots: [
+            {
+              name: 'banner',
+              description: 'Slot to add a banner across the top of the header.',
+            },
+            {
+              name: 'breadcrumb',
+              description: 'Slot to add breadcrumbs at the bottom of the header.',
+            },
+            {
+              name: 'menu',
+              description: 'Slot to add a menu below the divider line.',
+            },
+            {
+              name: 'search',
+              description: 'Slot to add a search field to the right of the header.',
+            },
+            {
+              name: 'signature',
+              description: 'Slot to replace Government of Canada signature.',
+            },
+            {
+              name: 'skip-to-nav',
+              description: 'Slot to add a hidden skip to content navigation at the top of the header.',
+            },
+            {
+              name: 'toggle',
+              description: 'Slot to add a custom language toggle in the top-right of the header.',
+            },
+          ],
+        };
+
+        headerDisplay.slots = gcdsHeader.slots;
+      </script>
+
+    </gcds-container>
+  </body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Events tab - Component display</title>
+
+    <script type="module" src="../dist/component-display/component-display.esm.js"></script>
+    <script nomodule src="../dist/component-display/component-display.js"></script>
+
+    <!-- GC Design System -->
+    <link rel="stylesheet" href="../components/dist/gcds.css" />
+    <script type="module" src="../components/dist/gcds.esm.js"></script>
+
+    <!-- GC Design System Utility -->
+    <link rel="stylesheet" href="https://cdn.design-system.canada.ca/@gcds-core/css-shortcuts@latest/dist/gcds-css-shortcuts.min.css" />
+  </head>
+  <body>
+    <gcds-container layout="page" tag="main" class="pt-300">
+      <gcds-heading tag="h1">Events tab</gcds-heading>
+
+      <gcds-text>The <code>events-tab</code> displays a component's events in a tabbed interface.</gcds-text>
+      <gcds-text>The description for each event is passed through the events property of the component-display element.</gcds-text>
+
+      <component-display class="mt-300" id="input-display">
+        <gcds-input
+          input-id="input-default"
+          label="Label"
+          name="example-default"
+          hint="Hint / example message."
+          required
+        >
+        </gcds-input>
+      </component-display>
+
+      <script>
+        const gcdsInput = {
+          tag: 'gcds-input',
+          events: [
+            {
+              name: 'gcdsBlur',
+              description: 'Emitted when the input loses focus.',
+              details: 'void',
+            },
+            {
+              name: 'gcdsChange',
+              description: 'Emitted when the input has changed.',
+              details: 'string',
+            },
+            {
+              name: 'gcdsError',
+              description: 'Emitted when the input has a validation error.',
+              details: 'object',
+            },
+            {
+              name: 'gcdsFocus',
+              description: 'Emitted when the input has focus.',
+              details: 'void',
+            },
+            {
+              name: 'gcdsInput',
+              description: 'Emitted when the element has received input.',
+              details: 'string',
+            },
+            {
+              name: 'gcdsSuggestionSelected',
+              description: 'Emitted when a suggestion is selected.',
+              details: 'string',
+            },
+            {
+              name: 'gcdsValid',
+              description: 'Emitted when the input has a validation error.',
+              details: 'object',
+            },
+          ],
+        };
+
+        const inputDisplay = document.getElementById('input-display');
+        inputDisplay.events = gcdsInput.events;
+      </script>
+
+    </gcds-container>
+  </body>
+</html>

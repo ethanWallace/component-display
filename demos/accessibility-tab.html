@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Code frame - Component display</title>
+    <title>Accessibility tab - Component display</title>
 
     <script type="module" src="../dist/component-display/component-display.esm.js"></script>
     <script nomodule src="../dist/component-display/component-display.js"></script>
@@ -17,11 +17,12 @@
   </head>
   <body>
     <gcds-container layout="page" tag="main" class="pt-300">
-      <gcds-heading tag="h1">Code frame</gcds-heading>
+      <gcds-heading tag="h1">Accessibility tab</gcds-heading>
 
-      <gcds-text>The <code>code-frame</code> displays the live component and the mark up to render the component in different frameworks.</gcds-text>
+      <gcds-text>The <code>accessibility-tab</code> allows running an accessibility test against the live component.</gcds-text>
+      <gcds-text>The axe-core library provides a French translation of accessibility issues and test results.</gcds-text>
 
-      <component-display class="mt-300" id="input-display">
+      <component-display class="mt-300" id="input-display" accessibility>
         <gcds-input
           input-id="input-default"
           label="Label"
