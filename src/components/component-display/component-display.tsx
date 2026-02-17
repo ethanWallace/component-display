@@ -305,8 +305,8 @@ export class ComponentDisplay {
           </div>
         ) : null}
         {/* Change status */}
-        <span id="change-status" role="status" aria-atomic="true" aria-relevant="removals"></span>
         <gcds-sr-only tag="span">
+          <span id="change-status" role="status" aria-atomic="true" aria-relevant="removals"></span>
         </gcds-sr-only>
       </Host>
     );
