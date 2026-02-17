@@ -1,0 +1,32 @@
+import { EventEmitter } from '../../stencil-public-runtime';
+import 'prismjs/components/prism-jsx';
+export declare class CodeFrame {
+    el: HTMLElement;
+    private landmarkIframe?;
+    source: string;
+    landmarkDisplay?: boolean;
+    accessibility?: boolean;
+    framework?: 'html' | 'react' | 'vue' | 'angular';
+    statusUpdate: EventEmitter<Object>;
+    showCode: boolean;
+    activeFormat: string;
+    htmlCode: string;
+    reactCode: string;
+    vueCode: string;
+    angularCode: string;
+    copyLabel: string;
+    lang: string;
+    private codeEl?;
+    onSourceChange(): Promise<void>;
+    onFrameworkChange(): Promise<void>;
+    componentWillLoad(): Promise<void>;
+    componentDidLoad(): void;
+    private convertToReact;
+    private convertToAngular;
+    private formatCodePreview;
+    private updateDisplayedCode;
+    private getActiveCode;
+    private onFormatChange;
+    private copyCode;
+    render(): any;
+}

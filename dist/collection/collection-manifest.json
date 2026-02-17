@@ -1,0 +1,17 @@
+{
+  "entries": [
+    "components/accessibility-tab/accessibility-tab.js",
+    "components/attribute-tab/attribute-tab.js",
+    "components/code-frame/code-frame.js",
+    "components/component-display/component-display.js",
+    "components/events-tab/events-tab.js",
+    "components/slots-tab/slots-tab.js"
+  ],
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "4.35.3",
+    "typescriptVersion": "5.5.4"
+  },
+  "collections": [],
+  "bundles": []
+}

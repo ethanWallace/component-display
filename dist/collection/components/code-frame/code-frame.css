@@ -1,0 +1,76 @@
+@layer reset, default;
+
+@layer reset {
+  :host {
+    display: block;
+
+    slot {
+      display: initial;
+    }
+  }
+}
+
+@layer default {
+  :host {
+    margin: 0 0 var(--gcds-spacing-300);
+
+    .code-actions-bar,
+    .component-preview {
+      border: var(--gcds-border-width-md) solid var(--gcds-border-default);
+    }
+
+    .code-actions-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--gcds-spacing-300);
+      justify-content: space-between;
+      padding: var(--gcds-spacing-225);
+
+      gcds-select {
+        /* !!! TODO: Remove when label is fixed */
+        margin-block-start: calc(var(--gcds-spacing-75) * -1);
+        --gcds-select-margin: 0;
+      }
+    }
+
+    .component-preview {
+      padding: var(--gcds-spacing-350) var(--gcds-spacing-250);
+      border-block-start: 0;
+
+      iframe {
+        width: 100%;
+        height: var(--component-display-iframe-height, 12rem);
+        border: none;
+      }
+
+      @media only screen and (width >= 64em) {
+        overflow-x: scroll;
+
+        iframe {
+          width: var(--gcds-container-size-xl);
+        }
+      }
+    }
+
+    .code-preview {
+      margin-block-start: calc(var(--gcds-border-width-md) * -1);
+
+      &.hidden {
+        display: none;
+      }
+
+      pre {
+        border-radius: 0 !important;
+        margin: 0 !important;
+      }
+
+      gcds-button {
+        margin: var(--gcds-spacing-300) 0 0;
+
+        &:not(:hover) {
+          --gcds-button-secondary-default-text: var(--gcds-text-light);
+        }
+      }
+    }
+  }
+}

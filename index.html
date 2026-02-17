@@ -1,0 +1,55 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Component display</title>
+
+    <script type="module" src="/build/component-display.esm.js"></script>
+    <script nomodule src="/build/component-display.js"></script>
+
+    <!-- GC Design System -->
+    <link rel="stylesheet" href="/components/dist/gcds.css" />
+    <script type="module" src="/components/dist/gcds.esm.js"></script>
+
+    <!-- GC Design System Utility -->
+    <link rel="stylesheet" href="https://cdn.design-system.canada.ca/@gcds-core/css-shortcuts@latest/dist/gcds-css-shortcuts.min.css" />
+  </head>
+  <body>
+    <gcds-container layout="page" tag="main" class="pt-300">
+      <gcds-heading tag="h1">Component-display</gcds-heading>
+
+      <gcds-text>The <code>component-display</code> component displays a component's attributes, slots, and events in a tabbed interface.</gcds-text>
+
+      <gcds-heading tag="h2">Features</gcds-heading>
+
+      <ul class="list-disc mb-300">
+        <li><b>Code frame:</b> Displays the live component and the mark up to render the component in different frameworks</li>
+        <li><b>Attributes:</b> Displays component attributes in a tabbed interface</li>
+        <li><b>Slots:</b> Displays component slots in a tabbed interface</li>
+        <li><b>Events:</b> Displays component events in a tabbed interface</li>
+        <li><b>Accessibility:</b> Allows running an accessibility test against the live component</li>
+      </ul>
+
+      <gcds-heading tag="h2">Demos</gcds-heading>
+
+      <ul class="list-disc mb-300">
+        <li><gcds-link href="/demos/basic">Basic demo</gcds-link></li>
+        <li><gcds-link href="/demos/with-slots">Demo with slots</gcds-link></li>
+        <li><gcds-link href="/demos/with-events">Demo with events</gcds-link></li>
+        <li><gcds-link href="/demos/with-accessibility">Demo with accessibility</gcds-link></li>
+      </ul>
+
+      <gcds-heading tag="h2">Language files</gcds-heading>
+
+      <ul class="list-disc mb-300">
+        <li><gcds-link href="https://github.com/ethanWallace/component-display/blob/main/src/components/component-display/i18n/i18n.js">Component display component</gcds-link></li>
+        <li><gcds-link href="https://github.com/ethanWallace/component-display/blob/main/src/components/code-frame/i18n/i18n.js">Code frame</gcds-link></li>
+        <li><gcds-link href="https://github.com/ethanWallace/component-display/blob/main/src/components/attribute-tab/i18n/i18n.js">Attribute tab</gcds-link></li>
+        <li><gcds-link href="https://github.com/ethanWallace/component-display/blob/main/src/components/slots-tab/i18n/i18n.js">Slots tab</gcds-link></li>
+        <li><gcds-link href="https://github.com/ethanWallace/component-display/blob/main/src/components/events-tab/i18n/i18n.js">Events tab</gcds-link></li>
+        <li><gcds-link href="https://github.com/ethanWallace/component-display/blob/main/src/components/accessibility-tab/i18n/i18n.js">Accessibility tab</gcds-link></li>
+      </ul>
+    </gcds-container>
+  </body>
+</html>

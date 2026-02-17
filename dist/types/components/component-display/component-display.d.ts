@@ -1,0 +1,32 @@
+import { AttributesType, SlotType, EventType } from '../../utils/utils';
+export declare class ComponentDisplay {
+    el: HTMLElement;
+    private displayElement?;
+    private slotHistory;
+    private attributeObject;
+    private slotObject;
+    private eventObject;
+    attrs?: string | Array<AttributesType>;
+    validateAttrs(): void;
+    slots?: string | Array<SlotType>;
+    validateSlots(): void;
+    events?: string | Array<EventType>;
+    validateEvents(): void;
+    accessibility?: boolean;
+    landmarkDisplay?: boolean;
+    framework?: 'html' | 'react' | 'vue' | 'angular';
+    display: 'attrs' | 'slots' | 'events' | 'a11y' | null;
+    lang: string;
+    codeSource: string;
+    attributeChangeListener(e: any): void;
+    statusUpdateListener(e: any): void;
+    slotValueChangeListener(e: any): void;
+    keyDownListener(e: any): Promise<void>;
+    componentWillLoad(): Promise<void>;
+    componentDidLoad(): Promise<void>;
+    private renderSlotContent;
+    private updateCodePreview;
+    private setDisplay;
+    private updateStatus;
+    render(): any;
+}
