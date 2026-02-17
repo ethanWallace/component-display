@@ -1,4 +1,4 @@
-import { Component, h, Prop, State, Watch, Element } from '@stencil/core';
+import { Component, h, Prop, State, Watch, Element, Event, EventEmitter } from '@stencil/core';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
 import prettier from 'prettier/standalone';
@@ -38,6 +38,12 @@ export class CodeFrame {
    * Starting framework for code preview generation
    */
   @Prop() framework?: 'html' | 'react' | 'vue' | 'angular' = 'html';
+
+  /* ---------------------------
+   * Events
+   * --------------------------- */
+
+  @Event() statusUpdate!: EventEmitter<Object>;
 
   /* ---------------------------
    * State
@@ -207,6 +213,10 @@ export class CodeFrame {
     this.activeFormat = value as 'html' | 'react' | 'vue' | 'angular';
 
     this.updateDisplayedCode();
+
+    setTimeout(() => {
+      this.statusUpdate.emit({ name: value, type: 'framework' });
+    }, 2500);
   }
 
   /*

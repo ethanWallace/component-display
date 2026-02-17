@@ -63,6 +63,10 @@ export interface AttributeTabCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAttributeTabElement;
 }
+export interface CodeFrameCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCodeFrameElement;
+}
 export interface SlotsTabCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLSlotsTabElement;
@@ -92,7 +96,18 @@ declare global {
         prototype: HTMLAttributeTabElement;
         new (): HTMLAttributeTabElement;
     };
+    interface HTMLCodeFrameElementEventMap {
+        "statusUpdate": Object;
+    }
     interface HTMLCodeFrameElement extends Components.CodeFrame, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLCodeFrameElementEventMap>(type: K, listener: (this: HTMLCodeFrameElement, ev: CodeFrameCustomEvent<HTMLCodeFrameElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLCodeFrameElementEventMap>(type: K, listener: (this: HTMLCodeFrameElement, ev: CodeFrameCustomEvent<HTMLCodeFrameElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLCodeFrameElement: {
         prototype: HTMLCodeFrameElement;
@@ -161,6 +176,7 @@ declare namespace LocalJSX {
           * @default false
          */
         "landmarkDisplay"?: boolean;
+        "onStatusUpdate"?: (event: CodeFrameCustomEvent<Object>) => void;
         "source"?: string;
     }
     interface ComponentDisplay {

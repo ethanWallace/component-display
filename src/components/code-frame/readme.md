@@ -15,6 +15,13 @@
 | `source`          | `source`           |             | `string`                                  | `undefined` |
 
 
+## Events
+
+| Event          | Description | Type                  |
+| -------------- | ----------- | --------------------- |
+| `statusUpdate` |             | `CustomEvent<Object>` |
+
+
 ## Dependencies
 
 ### Used by
